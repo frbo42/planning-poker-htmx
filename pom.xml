@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.fb</groupId>
-    <artifactId>planing-poker</artifactId>
+    <artifactId>planning-poker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>Planing Poker</name>
 
