@@ -11,7 +11,7 @@
     <groupId>org.fb</groupId>
     <artifactId>planning-poker</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>Planing Poker</name>
+    <name>Planning Poker</name>
 
     <properties>
         <java.version>21</java.version>
