@@ -19,7 +19,7 @@ class Htmx(val game: Game) {
         }
     }
 
-    fun gameScreen(userName: String): String {
+    fun gameFragment(userName: String): String {
         return createHTML().div {
             id = "game"
             section {

@@ -24,19 +24,52 @@ fun document(): Document {
         body {
             id = "body"
             h1 { +TITLE }
-            login()
+            section {
+                id = "poker"
+                gameId()
+            }
         }
     }
 }
 
-private fun BODY.login() {
+private fun SECTION.gameId() {
     section {
+        id = "gameId-input"
+        form {
+            hxPost("/game")
+            hxTrigger("submit")
+            hxTarget("#poker")
+            hxSwap("innerHTML")
+            hxReplaceUrl(true)
+
+            label {
+                htmlFor = "gameId"
+                +"Game Id"
+            }
+            input {
+                id = "gameId"
+                type = InputType.text
+                name = "gameId"
+                placeholder = "Enter game id"
+                required = true
+            }
+            button {
+                type = ButtonType.submit
+                +"Submit Game"
+            }
+        }
+    }
+}
+
+
+fun loginFragment( gameId:String): String {
+    return createHTML().section {
         id = "user"
         form {
-            hxPost("/user")
+            hxPost("/${gameId}/user")
             hxTrigger("submit")
-            hxTarget("#body")
-            hxSwap("outerHTML")
+            hxTarget("#poker")
+            hxSwap("innerHTML")
 
             input {
                 type = InputType.text
@@ -51,9 +84,8 @@ private fun BODY.login() {
     }
 }
 
-fun mainPage(userName: String): String {
-    return createHTML().body {
-        h1 { +TITLE }
+fun mainPage(gameId: String, userName: String): String {
+    return createHTML().section {
         div {
             classes = setOf("top-right")
             p {
@@ -61,8 +93,8 @@ fun mainPage(userName: String): String {
             }
         }
         section {
-            id = "game"
-            hxGet("/game?userName=${userName}")
+            id = "score"
+            hxGet("/${gameId}/score?userName=${userName}")
             hxTrigger("load, every 2s")
             hxSwap("innerHTML")
         }
@@ -70,7 +102,7 @@ fun mainPage(userName: String): String {
             id = "button-bar"
             button {
                 id = "show"
-                hxPost("/show?userName=${userName}")
+                hxPost("/${gameId}/show?userName=${userName}")
                 hxTrigger("click")
                 hxTarget("#game")
                 hxSwap("outerHTML")
@@ -78,7 +110,7 @@ fun mainPage(userName: String): String {
             }
             button {
                 id = "reset"
-                hxPost("/reset?userName=${userName}")
+                hxPost("/${gameId}/reset?userName=${userName}")
                 hxTrigger("click")
                 hxTarget("#game")
                 hxSwap("innerHTML")

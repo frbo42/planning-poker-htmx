@@ -21,3 +21,19 @@ fun HTMLTag.hxTarget(value: String) {
 fun HTMLTag.hxSwap(value: String) {
     attributes["hx-swap"] = value
 }
+
+fun HTMLTag.hxReplaceUrl(value: Boolean) {
+    attributes["hx-replace-url"] = value.toString()
+}
+
+fun HTMLTag.hxInclude(value: String) {
+    attributes["hx-include"] = value
+}
+
+fun HTMLTag.hxPushUrl(value: Boolean) {
+    attributes["hx-push-url"] = value.toString()
+}
+
+fun HTMLTag.hxPushUrl(value: String) {
+    attributes["hx-push-url"] = value
+}

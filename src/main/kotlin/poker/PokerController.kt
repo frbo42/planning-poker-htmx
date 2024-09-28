@@ -1,11 +1,9 @@
 package poker
 
+import jakarta.servlet.http.HttpServletResponse
 import kotlinx.html.dom.serialize
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController("/")
@@ -19,15 +17,25 @@ class PokerController(
         return document().serialize()
     }
 
-    @PostMapping("/user")
-    fun login(@RequestParam(name = "userName") userName: String): String {
-        game.addUser(userName)
-        return mainPage(userName)
+    @PostMapping("/game")
+    fun gameId(@RequestParam("gameId") gameId: String,response: HttpServletResponse) {
+        response.sendRedirect("/${gameId}/game")
     }
 
-    @GetMapping("/game")
-    fun game(@RequestParam(name = "userName") userName: String): String {
-        return htmx.gameScreen(userName)
+    @GetMapping("/{gameId}/game")
+    fun getGameId(@PathVariable gameId: String): String {
+        return loginFragment(gameId)
+    }
+
+    @PostMapping("{gameId}/user")
+    fun login(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
+        game.addUser(userName)
+        return mainPage(gameId, userName)
+    }
+
+    @GetMapping("/{gameId}/score")
+    fun score(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
+        return htmx.gameFragment(userName)
     }
 
     @PostMapping("/selectCard")
@@ -39,15 +47,15 @@ class PokerController(
         return htmx.cards(userName)
     }
 
-    @PostMapping("/show")
-    fun show(@RequestParam(name = "userName") userName: String): String {
+    @PostMapping("/{gameId}/show")
+    fun show(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
         game.show = true
-        return htmx.gameScreen(userName)
+        return htmx.gameFragment(userName)
     }
 
-    @PostMapping("/reset")
-    fun reset(@RequestParam(name = "userName") userName: String): String {
+    @PostMapping("/{gameId}/reset")
+    fun reset(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
         game.reset()
-        return htmx.gameScreen(userName)
+        return htmx.gameFragment(userName)
     }
 }
