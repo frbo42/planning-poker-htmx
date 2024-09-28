@@ -2,8 +2,8 @@ package poker
 
 import kotlinx.html.*
 import kotlinx.html.dom.createHTMLDocument
+import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
-import org.w3c.dom.Document
 
 
 private const val TITLE = "Planning Poker"
@@ -17,7 +17,7 @@ fun HTML.header() {
     }
 }
 
-fun document(): Document {
+fun document(): String {
     return createHTMLDocument().html {
         lang = "en"
         header()
@@ -29,7 +29,7 @@ fun document(): Document {
                 gameId()
             }
         }
-    }
+    }.serialize()
 }
 
 private fun SECTION.gameId() {

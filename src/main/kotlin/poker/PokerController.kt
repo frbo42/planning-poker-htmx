@@ -1,7 +1,6 @@
 package poker
 
 import jakarta.servlet.http.HttpServletResponse
-import kotlinx.html.dom.serialize
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
@@ -14,7 +13,7 @@ class PokerController(
 
     @GetMapping("/", produces = [MediaType.TEXT_HTML_VALUE])
     fun home(): String {
-        return document().serialize()
+        return document()
     }
 
     @PostMapping("/game")
