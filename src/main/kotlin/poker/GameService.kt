@@ -20,8 +20,9 @@ class GameService {
     }
 
     fun getGame(gameId: String): Game {
-        require(games.containsKey(gameId))
-
+        if (!games.containsKey(gameId)) {
+            createGame(gameId)
+        }
         return games[gameId]!!
     }
 }

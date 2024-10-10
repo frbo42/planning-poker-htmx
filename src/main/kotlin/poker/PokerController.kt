@@ -21,7 +21,7 @@ class PokerController(
         return inputUserFragment(gameId)
     }
 
-    @PostMapping("{gameId}/setUser")
+    @PostMapping("{gameId}/" + setUser)
     fun setUser(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
         service.addUser(gameId, userName)
         return mainPage(gameId, userName)

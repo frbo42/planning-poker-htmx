@@ -5,7 +5,7 @@ import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
 
-
+const val setUser = "setUser"
 private const val TITLE = "Planning Poker"
 private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
@@ -66,7 +66,7 @@ fun inputUserFragment(gameId: String): String {
         userDetails(gameId, null)
 
         form {
-            hxPost("/${gameId}/setUser")
+            hxPost("/${gameId}/${setUser}")
             hxTrigger("submit")
             hxTarget("#poker")
             hxSwap("innerHTML")
