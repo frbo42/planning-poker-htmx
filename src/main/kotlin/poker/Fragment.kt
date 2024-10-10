@@ -83,6 +83,61 @@ fun inputUserFragment(gameId: String): String {
     }
 }
 
+private fun userState(userName: String, game: Game): String {
+    return if (game.show) {
+        "$userName played: ${game.cards[userName]}"
+    } else {
+        if (game.cards[userName] == null) {
+            "$userName still thinking"
+        } else {
+            "$userName ready"
+        }
+    }
+}
+
+fun gameFragment(userName: String, game: Game): String {
+    return createHTML().div {
+        id = "game"
+        section {
+            id = "users"
+            h2 { +"Users" }
+            game.cards.keys.forEach {
+                p {
+                    +userState(it, game)
+                }
+            }
+        }
+        section {
+            h2 {
+                +"Cards"
+            }
+            div {
+                id = "cards"
+                buildCards(userName, game)
+            }
+        }
+    }
+}
+
+private fun DIV.buildCards(userName: String, game: Game) {
+    GameService.cards.forEach {
+        button {
+            classes = setOf(game.selectionState(userName, it))
+            hxPost("/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
+            hxTrigger("click")
+            hxTarget("#cards")
+            hxSwap("innerHTML")
+            +it
+        }
+    }
+}
+
+fun cards(userName: String, game: Game): String {
+    return createHTML().div {
+        id = "cards"
+        buildCards(userName, game)
+    }
+}
 fun mainPage(gameId: String, userName: String): String {
     return createHTML().section {
         userDetails(gameId, userName)

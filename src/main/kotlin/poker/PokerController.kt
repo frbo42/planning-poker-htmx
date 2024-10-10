@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController("/")
 class PokerController(
-    val game: Game,
+    val service: GameService,
     val htmx: Htmx
 ) {
 
@@ -18,38 +18,44 @@ class PokerController(
 
     @PostMapping("/setGameId")
     fun gameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
+        service.createGame(gameId)
         return inputUserFragment(gameId)
     }
 
     @PostMapping("{gameId}/setUser")
     fun setUser(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
-        game.addUser(userName)
+        service.addUser(gameId, userName)
         return mainPage(gameId, userName)
     }
 
     @GetMapping("/{gameId}/score")
     fun score(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
-        return htmx.gameFragment(userName)
+        val game = service.getGame(gameId)
+        return gameFragment(userName, game)
     }
 
-    @PostMapping("/selectCard")
+    @PostMapping("/{gameId}/selectCard")
     fun selectCard(
+        @PathVariable("gameId") gameId: String,
         @RequestParam(name = "selectedCard") selectedCard: String,
         @RequestParam(name = "userName") userName: String
     ): String {
+        val game = service.getGame(gameId)
         game.selectCard(userName, selectedCard)
-        return htmx.cards(userName)
+        return cards(userName, game)
     }
 
     @PostMapping("/{gameId}/show")
     fun show(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
+        val game = service.getGame(gameId)
         game.show = true
-        return htmx.gameFragment(userName)
+        return gameFragment(userName, game)
     }
 
     @PostMapping("/{gameId}/reset")
     fun reset(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
+        val game = service.getGame(gameId)
         game.reset()
-        return htmx.gameFragment(userName)
+        return gameFragment(userName, game)
     }
 }
