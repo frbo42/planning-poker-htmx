@@ -18,11 +18,11 @@ class PokerController(
 
     @PostMapping("/setGameId")
     fun gameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
-        return loginFragment(gameId)
+        return inputUserFragment(gameId)
     }
 
-    @PostMapping("{gameId}/user")
-    fun login(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
+    @PostMapping("{gameId}/setUser")
+    fun setUser(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
         game.addUser(userName)
         return mainPage(gameId, userName)
     }

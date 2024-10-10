@@ -26,13 +26,13 @@ fun home(): String {
             h1 { +TITLE }
             section {
                 id = "poker"
-                enterGameId()
+                inputGameIdFragment()
             }
         }
     }.serialize()
 }
 
-private fun SECTION.enterGameId() {
+private fun SECTION.inputGameIdFragment() {
     section {
         id = "gameId-input"
         form {
@@ -59,11 +59,13 @@ private fun SECTION.enterGameId() {
     }
 }
 
-fun loginFragment( gameId:String): String {
+fun inputUserFragment(gameId: String): String {
     return createHTML().section {
         id = "user"
+        userDetails(gameId, null)
+
         form {
-            hxPost("/${gameId}/user")
+            hxPost("/${gameId}/setUser")
             hxTrigger("submit")
             hxTarget("#poker")
             hxSwap("innerHTML")
@@ -83,12 +85,7 @@ fun loginFragment( gameId:String): String {
 
 fun mainPage(gameId: String, userName: String): String {
     return createHTML().section {
-        div {
-            classes = setOf("top-right")
-            p {
-                +userName
-            }
-        }
+        userDetails(gameId, userName)
         section {
             id = "score"
             hxGet("/${gameId}/score?userName=${userName}")
@@ -112,6 +109,20 @@ fun mainPage(gameId: String, userName: String): String {
                 hxTarget("#game")
                 hxSwap("innerHTML")
                 +"Reset"
+            }
+        }
+    }
+}
+
+private fun SECTION.userDetails(gameId: String, userName: String?) {
+    div {
+        classes = setOf("top-right")
+        p {
+            +"Game: $gameId"
+        }
+        userName?.let {
+            p {
+                +"User: $userName"
             }
         }
     }
