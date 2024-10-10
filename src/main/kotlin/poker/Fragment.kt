@@ -10,10 +10,8 @@ const val SET_USER = "setUser"
 
 private const val CARDS = "cards"
 private const val GAME = "game"
-
+private const val GAME_ID = "gameId"
 private const val POKER = "poker"
-
-
 private const val TITLE = "Planning Poker"
 
 private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
@@ -49,13 +47,13 @@ private fun SECTION.inputGameIdFragment() {
             hxTargetId(POKER)
             hxSwap("innerHTML")
             label {
-                htmlFor = "gameId"
+                htmlFor = GAME_ID
                 +"Game Id"
             }
             input {
-                id = "gameId"
+                id = GAME_ID
                 type = InputType.text
-                name = "gameId"
+                name = GAME_ID
                 placeholder = "Enter game id"
                 required = true
             }
@@ -156,7 +154,6 @@ fun mainPage(gameId: String, userName: String): String {
         }
         section {
             button {
-                id = "show"
                 hxPost("/${gameId}/show?userName=${userName}")
                 hxTrigger("click")
                 hxTargetId(GAME)
@@ -164,7 +161,6 @@ fun mainPage(gameId: String, userName: String): String {
                 +"Show Cards"
             }
             button {
-                id = "reset"
                 hxPost("/${gameId}/reset?userName=${userName}")
                 hxTrigger("click")
                 hxTargetId(GAME)
