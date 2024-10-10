@@ -5,14 +5,16 @@ import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
 
+const val SCORE = "score"
 const val SET_USER = "setUser"
 
 private const val CARDS = "cards"
 private const val GAME = "game"
+
 private const val POKER = "poker"
 
-private const val TITLE = "Planning Poker"
 
+private const val TITLE = "Planning Poker"
 
 private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
@@ -30,7 +32,6 @@ fun home(): String {
         lang = "en"
         header()
         body {
-            id = "body"
             h1 { +TITLE }
             section {
                 id = POKER
@@ -105,7 +106,6 @@ fun gameFragment(userName: String, game: Game): String {
     return createHTML().div {
         id = GAME
         section {
-            id = "users"
             h2 { +"Users" }
             game.cards.keys.forEach {
                 p {
@@ -144,17 +144,17 @@ fun cards(userName: String, game: Game): String {
         buildCards(userName, game)
     }
 }
+
 fun mainPage(gameId: String, userName: String): String {
     return createHTML().section {
         userDetails(gameId, userName)
         section {
-            id = "score"
-            hxGet("/${gameId}/score?userName=${userName}")
+            id = SCORE
+            hxGet("/${gameId}/${SCORE}?userName=${userName}")
             hxTrigger("load, every 2s")
             hxSwap("innerHTML")
         }
         section {
-            id = "button-bar"
             button {
                 id = "show"
                 hxPost("/${gameId}/show?userName=${userName}")
