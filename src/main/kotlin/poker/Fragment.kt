@@ -6,6 +6,8 @@ import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
 
 const val setUser = "setUser"
+private const val poker = "poker"
+
 private const val TITLE = "Planning Poker"
 private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
@@ -18,6 +20,7 @@ fun HTML.header() {
     }
 }
 
+
 fun home(): String {
     return createHTMLDocument().html {
         lang = "en"
@@ -26,7 +29,7 @@ fun home(): String {
             id = "body"
             h1 { +TITLE }
             section {
-                id = "poker"
+                id = poker
                 inputGameIdFragment()
             }
         }
@@ -39,7 +42,7 @@ private fun SECTION.inputGameIdFragment() {
         form {
             hxPost("/setGameId")
             hxTrigger("submit")
-            hxTarget("#poker")
+            hxTargetId(poker)
             hxSwap("innerHTML")
             label {
                 htmlFor = "gameId"
@@ -68,7 +71,7 @@ fun inputUserFragment(gameId: String): String {
         form {
             hxPost("/${gameId}/${setUser}")
             hxTrigger("submit")
-            hxTarget("#poker")
+            hxTargetId(poker)
             hxSwap("innerHTML")
 
             input {

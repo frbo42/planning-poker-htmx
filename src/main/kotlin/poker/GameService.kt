@@ -7,16 +7,18 @@ class GameService {
 
     val games = mutableMapOf<String, Game>()
 
-    fun addUser(gameId: String, userName: String) {
-        require(games.containsKey(gameId))
-
-        games[gameId]?.addUser(userName)
-    }
-
     fun createGame(gameId: String) {
         if (!games.containsKey(gameId)) {
             games[gameId] = Game(gameId)
         }
+    }
+
+    fun addUser(gameId: String, userName: String) {
+        if (!games.containsKey(gameId)) {
+            createGame(gameId)
+        }
+
+        games[gameId]?.addUser(userName)
     }
 
     fun getGame(gameId: String): Game {

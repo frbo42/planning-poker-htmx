@@ -18,6 +18,10 @@ fun HTMLTag.hxTarget(value: String) {
     attributes["hx-target"] = value
 }
 
+fun HTMLTag.hxTargetId(value: String) {
+    attributes["hx-target"] = "#$value"
+}
+
 fun HTMLTag.hxSwap(value: String) {
     attributes["hx-swap"] = value
 }
