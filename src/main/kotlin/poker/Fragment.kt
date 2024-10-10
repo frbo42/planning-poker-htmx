@@ -17,7 +17,7 @@ fun HTML.header() {
     }
 }
 
-fun document(): String {
+fun home(): String {
     return createHTMLDocument().html {
         lang = "en"
         header()
@@ -26,22 +26,20 @@ fun document(): String {
             h1 { +TITLE }
             section {
                 id = "poker"
-                gameId()
+                enterGameId()
             }
         }
     }.serialize()
 }
 
-private fun SECTION.gameId() {
+private fun SECTION.enterGameId() {
     section {
         id = "gameId-input"
         form {
-            hxPost("/game")
+            hxPost("/setGameId")
             hxTrigger("submit")
             hxTarget("#poker")
             hxSwap("innerHTML")
-            hxReplaceUrl(true)
-
             label {
                 htmlFor = "gameId"
                 +"Game Id"
@@ -60,7 +58,6 @@ private fun SECTION.gameId() {
         }
     }
 }
-
 
 fun loginFragment( gameId:String): String {
     return createHTML().section {

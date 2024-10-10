@@ -12,17 +12,12 @@ class PokerController(
 ) {
 
     @GetMapping("/", produces = [MediaType.TEXT_HTML_VALUE])
-    fun home(): String {
-        return document()
+    fun getHome(): String {
+        return home()
     }
 
-    @PostMapping("/game")
-    fun gameId(@RequestParam("gameId") gameId: String,response: HttpServletResponse) {
-        response.sendRedirect("/${gameId}/game")
-    }
-
-    @GetMapping("/{gameId}/game")
-    fun getGameId(@PathVariable gameId: String): String {
+    @PostMapping("/setGameId")
+    fun gameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
         return loginFragment(gameId)
     }
 
