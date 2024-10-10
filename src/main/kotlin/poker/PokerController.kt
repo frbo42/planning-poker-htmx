@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*
 @RestController("/")
 class PokerController(
     val service: GameService,
-    val htmx: Htmx
 ) {
 
     @GetMapping("/", produces = [MediaType.TEXT_HTML_VALUE])

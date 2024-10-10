@@ -7,6 +7,7 @@ import kotlinx.html.stream.createHTML
 
 
 private const val TITLE = "Planning Poker"
+private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
 fun HTML.header() {
     head {
@@ -120,7 +121,7 @@ fun gameFragment(userName: String, game: Game): String {
 }
 
 private fun DIV.buildCards(userName: String, game: Game) {
-    GameService.cards.forEach {
+    cards.forEach {
         button {
             classes = setOf(game.selectionState(userName, it))
             hxPost("/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
