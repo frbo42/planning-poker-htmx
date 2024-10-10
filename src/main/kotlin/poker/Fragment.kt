@@ -6,13 +6,15 @@ import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
 
 const val SET_USER = "setUser"
+
+private const val CARDS = "cards"
 private const val GAME = "game"
 private const val POKER = "poker"
 
 private const val TITLE = "Planning Poker"
 
-private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
+private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
 fun HTML.header() {
     head {
@@ -66,7 +68,6 @@ private fun SECTION.inputGameIdFragment() {
 
 fun inputUserFragment(gameId: String): String {
     return createHTML().section {
-        id = "user"
         userDetails(gameId, null)
 
         form {
@@ -117,7 +118,7 @@ fun gameFragment(userName: String, game: Game): String {
                 +"Cards"
             }
             div {
-                id = "cards"
+                id = CARDS
                 buildCards(userName, game)
             }
         }
@@ -130,7 +131,7 @@ private fun DIV.buildCards(userName: String, game: Game) {
             classes = setOf(game.selectionState(userName, it))
             hxPost("/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
             hxTrigger("click")
-            hxTarget("#cards")
+            hxTargetId(CARDS)
             hxSwap("innerHTML")
             +it
         }
@@ -139,7 +140,7 @@ private fun DIV.buildCards(userName: String, game: Game) {
 
 fun cards(userName: String, game: Game): String {
     return createHTML().div {
-        id = "cards"
+        id = CARDS
         buildCards(userName, game)
     }
 }
