@@ -5,11 +5,14 @@ import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
 
-const val setUser = "setUser"
-private const val poker = "poker"
+const val SET_USER = "setUser"
+private const val GAME = "game"
+private const val POKER = "poker"
 
 private const val TITLE = "Planning Poker"
+
 private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
+
 
 fun HTML.header() {
     head {
@@ -20,7 +23,6 @@ fun HTML.header() {
     }
 }
 
-
 fun home(): String {
     return createHTMLDocument().html {
         lang = "en"
@@ -29,7 +31,7 @@ fun home(): String {
             id = "body"
             h1 { +TITLE }
             section {
-                id = poker
+                id = POKER
                 inputGameIdFragment()
             }
         }
@@ -38,11 +40,10 @@ fun home(): String {
 
 private fun SECTION.inputGameIdFragment() {
     section {
-        id = "gameId-input"
         form {
             hxPost("/setGameId")
             hxTrigger("submit")
-            hxTargetId(poker)
+            hxTargetId(POKER)
             hxSwap("innerHTML")
             label {
                 htmlFor = "gameId"
@@ -69,9 +70,9 @@ fun inputUserFragment(gameId: String): String {
         userDetails(gameId, null)
 
         form {
-            hxPost("/${gameId}/${setUser}")
+            hxPost("/${gameId}/${SET_USER}")
             hxTrigger("submit")
-            hxTargetId(poker)
+            hxTargetId(POKER)
             hxSwap("innerHTML")
 
             input {
@@ -101,7 +102,7 @@ private fun userState(userName: String, game: Game): String {
 
 fun gameFragment(userName: String, game: Game): String {
     return createHTML().div {
-        id = "game"
+        id = GAME
         section {
             id = "users"
             h2 { +"Users" }
@@ -157,7 +158,7 @@ fun mainPage(gameId: String, userName: String): String {
                 id = "show"
                 hxPost("/${gameId}/show?userName=${userName}")
                 hxTrigger("click")
-                hxTarget("#game")
+                hxTargetId(GAME)
                 hxSwap("outerHTML")
                 +"Show Cards"
             }
@@ -165,7 +166,7 @@ fun mainPage(gameId: String, userName: String): String {
                 id = "reset"
                 hxPost("/${gameId}/reset?userName=${userName}")
                 hxTrigger("click")
-                hxTarget("#game")
+                hxTargetId(GAME)
                 hxSwap("innerHTML")
                 +"Reset"
             }
