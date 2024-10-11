@@ -56,7 +56,7 @@ fun homeUserFragment(gameId: String): String {
 private fun SECTION.inputGameIdFragment() {
     section {
         form {
-            hxPost("/poker/setGameId")
+            hxPost("/setGameId")
             hxTrigger("submit")
             hxTargetId(POKER)
             hxSwap("innerHTML")
@@ -84,7 +84,7 @@ fun SECTION.inputUser(gameId: String) {
         userDetails(gameId, null)
 
         form {
-            hxPost("/poker/${gameId}/${SET_USER}")
+            hxPost("/${gameId}/${SET_USER}")
             hxTrigger("submit")
             hxTargetId(POKER)
             hxSwap("innerHTML")
@@ -107,7 +107,7 @@ fun inputUserFragment(gameId: String): String {
         userDetails(gameId, null)
 
         form {
-            hxPost("/poker/${gameId}/${SET_USER}")
+            hxPost("/${gameId}/${SET_USER}")
             hxTrigger("submit")
             hxTargetId(POKER)
             hxSwap("innerHTML")
@@ -165,7 +165,7 @@ private fun DIV.buildCards(userName: String, game: Game) {
     cards.forEach {
         button {
             classes = setOf(game.selectionState(userName, it))
-            hxPost("/poker/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
+            hxPost("/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
             hxTrigger("click")
             hxTargetId(CARDS)
             hxSwap("innerHTML")
@@ -192,14 +192,14 @@ fun mainPage(gameId: String, userName: String): String {
         }
         section {
             button {
-                hxPost("/poker/${gameId}/show?userName=${userName}")
+                hxPost("/${gameId}/show?userName=${userName}")
                 hxTrigger("click")
                 hxTargetId(GAME)
                 hxSwap("outerHTML")
                 +"Show Cards"
             }
             button {
-                hxPost("/poker/${gameId}/reset?userName=${userName}")
+                hxPost("/${gameId}/reset?userName=${userName}")
                 hxTrigger("click")
                 hxTargetId(GAME)
                 hxSwap("innerHTML")

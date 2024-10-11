@@ -7,7 +7,7 @@ fun HTMLTag.hxGet(value: String) {
 }
 
 fun HTMLTag.hxPost(value: String) {
-    attributes["hx-post"] = value
+    attributes["hx-post"] = "/poker${value}"
 }
 
 fun HTMLTag.hxTrigger(value: String) {
