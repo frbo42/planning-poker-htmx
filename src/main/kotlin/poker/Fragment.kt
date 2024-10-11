@@ -13,6 +13,7 @@ private const val GAME = "game"
 private const val GAME_ID = "gameId"
 private const val MAIN = "main"
 private const val TITLE = "Planning Poker"
+private const val USER_NAME = "userName"
 
 private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
@@ -94,8 +95,12 @@ private fun SECTION.userInputFragment(gameId: String) {
         hxTargetId(MAIN)
         hxSwap("innerHTML")
         hxPushUrl("/poker/${gameId}")
-
+        label {
+            htmlFor = USER_NAME
+            +"User name"
+        }
         input {
+            id = USER_NAME
             type = InputType.text
             name = "userName"
             placeholder = "Enter username"
