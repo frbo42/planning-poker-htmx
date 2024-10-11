@@ -15,7 +15,6 @@ private const val MAIN = "main"
 private const val TITLE = "Planning Poker"
 private const val USER_NAME = "userName"
 
-private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
 
 fun HTML.header() {
     head {
@@ -154,7 +153,7 @@ fun gameFragment(userName: String, game: Game): String {
 }
 
 private fun DIV.buildCards(userName: String, game: Game) {
-    cards.forEach {
+    Game.cards.forEach {
         button {
             classes = setOf(game.selectionState(userName, it))
             hxPost("/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")

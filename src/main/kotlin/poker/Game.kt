@@ -24,4 +24,8 @@ data class Game(
             cards[it] = null
         }
     }
+
+    companion object {
+        val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
+    }
 }
