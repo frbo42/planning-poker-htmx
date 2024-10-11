@@ -2,7 +2,7 @@ package poker
 
 import kotlinx.html.HTMLTag
 
-public const val BASE_URL = "/poker"
+const val BASE_URL = "/poker"
 
 fun HTMLTag.hxGet(value: String) {
     attributes["hx-get"] = "${BASE_URL}${value}"

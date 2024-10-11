@@ -81,48 +81,35 @@ private fun SECTION.inputGameIdFragment() {
 
 fun SECTION.inputUser(gameId: String) {
     section {
-        userDetails(gameId, null)
+        userInputFragment(gameId)
+    }
+}
 
-        form {
-            hxPost("/${gameId}/${SET_USER}")
-            hxTrigger("submit")
-            hxTargetId(MAIN)
-            hxSwap("innerHTML")
+private fun SECTION.userInputFragment(gameId: String) {
+    userDetails(gameId, null)
 
-            input {
-                type = InputType.text
-                name = "userName"
-                placeholder = "Enter username"
-            }
-            button {
-                type = ButtonType.submit
-                +"submit"
-            }
+    form {
+        hxPost("/${gameId}/${SET_USER}")
+        hxTrigger("submit")
+        hxTargetId(MAIN)
+        hxSwap("innerHTML")
+        hxPushUrl("/poker/${gameId}")
+
+        input {
+            type = InputType.text
+            name = "userName"
+            placeholder = "Enter username"
+        }
+        button {
+            type = ButtonType.submit
+            +"submit"
         }
     }
 }
 
 fun inputUserFragment(gameId: String): String {
     return createHTML().section {
-        userDetails(gameId, null)
-
-        form {
-            hxPost("/${gameId}/${SET_USER}")
-            hxTrigger("submit")
-            hxTargetId(MAIN)
-            hxSwap("innerHTML")
-            hxPushUrl("/poker/${gameId}")
-
-            input {
-                type = InputType.text
-                name = "userName"
-                placeholder = "Enter username"
-            }
-            button {
-                type = ButtonType.submit
-                +"submit"
-            }
-        }
+        userInputFragment(gameId)
     }
 }
 
