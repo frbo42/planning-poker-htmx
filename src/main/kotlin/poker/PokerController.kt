@@ -21,7 +21,7 @@ class PokerController(
         return homeUserFragment(gameId)
     }
 
-    @PostMapping("/setGameId")
+    @PostMapping(SET_GAME_ID)
     fun setGameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
         service.createGame(gameId)
         return inputUserFragment(gameId)
@@ -39,7 +39,7 @@ class PokerController(
         return gameFragment(userName, game)
     }
 
-    @PostMapping("/{gameId}/selectCard")
+    @PostMapping("/{gameId}$SELECT_CARD")
     fun selectCard(
         @PathVariable("gameId") gameId: String,
         @RequestParam(name = "selectedCard") selectedCard: String,

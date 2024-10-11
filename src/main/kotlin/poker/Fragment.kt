@@ -7,6 +7,7 @@ import kotlinx.html.stream.createHTML
 
 const val SCORE = "score"
 const val SET_USER = "setUser"
+const val SELECT_CARD = "/selectCard"
 
 private const val CARDS = "cards"
 private const val GAME = "game"
@@ -53,10 +54,12 @@ fun homeUserFragment(gameId: String): String {
     }.serialize()
 }
 
+const val SET_GAME_ID = "/setGameId"
+
 private fun SECTION.inputGameIdFragment() {
     section {
         form {
-            hxPost("/setGameId")
+            hxPost(SET_GAME_ID)
             hxTrigger("submit")
             hxTargetId(MAIN)
             hxSwap("innerHTML")
@@ -156,7 +159,7 @@ private fun DIV.buildCards(userName: String, game: Game) {
     Game.cards.forEach {
         button {
             classes = setOf(game.selectionState(userName, it))
-            hxPost("/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
+            hxPost("/${game.gamId}${SELECT_CARD}?selectedCard=${it}&userName=${userName}")
             hxTrigger("click")
             hxTargetId(CARDS)
             hxSwap("innerHTML")
