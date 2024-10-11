@@ -11,7 +11,7 @@ const val SET_USER = "setUser"
 private const val CARDS = "cards"
 private const val GAME = "game"
 private const val GAME_ID = "gameId"
-private const val POKER = "poker"
+private const val MAIN = "main"
 private const val TITLE = "Planning Poker"
 
 private val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
@@ -32,7 +32,7 @@ fun home(): String {
         body {
             h1 { +TITLE }
             section {
-                id = POKER
+                id = MAIN
                 inputGameIdFragment()
             }
         }
@@ -46,7 +46,7 @@ fun homeUserFragment(gameId: String): String {
         body {
             h1 { +TITLE }
             section {
-                id = POKER
+                id = MAIN
                 inputUser(gameId)
             }
         }
@@ -58,7 +58,7 @@ private fun SECTION.inputGameIdFragment() {
         form {
             hxPost("/setGameId")
             hxTrigger("submit")
-            hxTargetId(POKER)
+            hxTargetId(MAIN)
             hxSwap("innerHTML")
             label {
                 htmlFor = GAME_ID
@@ -86,7 +86,7 @@ fun SECTION.inputUser(gameId: String) {
         form {
             hxPost("/${gameId}/${SET_USER}")
             hxTrigger("submit")
-            hxTargetId(POKER)
+            hxTargetId(MAIN)
             hxSwap("innerHTML")
 
             input {
@@ -109,7 +109,7 @@ fun inputUserFragment(gameId: String): String {
         form {
             hxPost("/${gameId}/${SET_USER}")
             hxTrigger("submit")
-            hxTargetId(POKER)
+            hxTargetId(MAIN)
             hxSwap("innerHTML")
             hxPushUrl("/poker/${gameId}")
 

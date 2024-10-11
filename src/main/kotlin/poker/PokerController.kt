@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*
 
 
 @RestController
-@RequestMapping("/poker")
+@RequestMapping(BASE_URL)
 class PokerController(
     val service: GameService,
 ) {
