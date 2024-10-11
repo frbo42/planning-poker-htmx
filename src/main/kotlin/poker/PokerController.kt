@@ -5,14 +5,20 @@ import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 
-@RestController("/")
+@RestController
+@RequestMapping("/poker")
 class PokerController(
     val service: GameService,
 ) {
 
-    @GetMapping("/", produces = [MediaType.TEXT_HTML_VALUE])
+    @GetMapping(produces = [MediaType.TEXT_HTML_VALUE])
     fun getHome(): String {
         return home()
+    }
+
+    @GetMapping("/{gameId}", produces = [MediaType.TEXT_HTML_VALUE])
+    fun getHomeWithGame(@PathVariable("gameId") gameId: String): String {
+        return homeUserFragment(gameId)
     }
 
     @PostMapping("/setGameId")

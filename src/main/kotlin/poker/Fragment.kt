@@ -39,10 +39,24 @@ fun home(): String {
     }.serialize()
 }
 
+fun homeUserFragment(gameId: String): String {
+    return createHTMLDocument().html {
+        lang = "en"
+        header()
+        body {
+            h1 { +TITLE }
+            section {
+                id = POKER
+                inputUser(gameId)
+            }
+        }
+    }.serialize()
+}
+
 private fun SECTION.inputGameIdFragment() {
     section {
         form {
-            hxPost("/setGameId")
+            hxPost("/poker/setGameId")
             hxTrigger("submit")
             hxTargetId(POKER)
             hxSwap("innerHTML")
@@ -65,12 +79,35 @@ private fun SECTION.inputGameIdFragment() {
     }
 }
 
+fun SECTION.inputUser(gameId: String) {
+    section {
+        userDetails(gameId, null)
+
+        form {
+            hxPost("/poker/${gameId}/${SET_USER}")
+            hxTrigger("submit")
+            hxTargetId(POKER)
+            hxSwap("innerHTML")
+
+            input {
+                type = InputType.text
+                name = "userName"
+                placeholder = "Enter username"
+            }
+            button {
+                type = ButtonType.submit
+                +"submit"
+            }
+        }
+    }
+}
+
 fun inputUserFragment(gameId: String): String {
     return createHTML().section {
         userDetails(gameId, null)
 
         form {
-            hxPost("/${gameId}/${SET_USER}")
+            hxPost("/poker/${gameId}/${SET_USER}")
             hxTrigger("submit")
             hxTargetId(POKER)
             hxSwap("innerHTML")
@@ -127,7 +164,7 @@ private fun DIV.buildCards(userName: String, game: Game) {
     cards.forEach {
         button {
             classes = setOf(game.selectionState(userName, it))
-            hxPost("/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
+            hxPost("/poker/${game.gamId}/selectCard?selectedCard=${it}&userName=${userName}")
             hxTrigger("click")
             hxTargetId(CARDS)
             hxSwap("innerHTML")
@@ -148,20 +185,20 @@ fun mainPage(gameId: String, userName: String): String {
         userDetails(gameId, userName)
         section {
             id = SCORE
-            hxGet("/${gameId}/${SCORE}?userName=${userName}")
+            hxGet("/poker/${gameId}/${SCORE}?userName=${userName}")
             hxTrigger("load, every 2s")
             hxSwap("innerHTML")
         }
         section {
             button {
-                hxPost("/${gameId}/show?userName=${userName}")
+                hxPost("/poker/${gameId}/show?userName=${userName}")
                 hxTrigger("click")
                 hxTargetId(GAME)
                 hxSwap("outerHTML")
                 +"Show Cards"
             }
             button {
-                hxPost("/${gameId}/reset?userName=${userName}")
+                hxPost("/poker/${gameId}/reset?userName=${userName}")
                 hxTrigger("click")
                 hxTargetId(GAME)
                 hxSwap("innerHTML")
