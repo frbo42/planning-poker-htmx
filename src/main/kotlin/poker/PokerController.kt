@@ -22,7 +22,7 @@ class PokerController(
     }
 
     @PostMapping("/setGameId")
-    fun gameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
+    fun setGameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
         service.createGame(gameId)
         return inputUserFragment(gameId)
     }
@@ -34,7 +34,7 @@ class PokerController(
     }
 
     @GetMapping("/{gameId}/$SCORE")
-    fun score(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
+    fun getScore(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
         val game = service.getGame(gameId)
         return gameFragment(userName, game)
     }

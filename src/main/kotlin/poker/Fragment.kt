@@ -111,6 +111,7 @@ fun inputUserFragment(gameId: String): String {
             hxTrigger("submit")
             hxTargetId(POKER)
             hxSwap("innerHTML")
+            hxPushUrl("/poker/${gameId}")
 
             input {
                 type = InputType.text
