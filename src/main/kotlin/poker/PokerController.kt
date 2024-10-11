@@ -11,12 +11,12 @@ class PokerController(
     val service: GameService,
 ) {
 
-    @GetMapping(produces = [MediaType.TEXT_HTML_VALUE])
+    @GetMapping(value = ["", "/"], produces = [MediaType.TEXT_HTML_VALUE])
     fun getHome(): String {
         return home()
     }
 
-    @GetMapping("/{gameId}", produces = [MediaType.TEXT_HTML_VALUE])
+    @GetMapping(value = ["/{gameId}", "/{gameId}/"], produces = [MediaType.TEXT_HTML_VALUE])
     fun getHomeWithGame(@PathVariable("gameId") gameId: String): String {
         return homeUserFragment(gameId)
     }
