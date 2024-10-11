@@ -186,7 +186,7 @@ fun mainPage(gameId: String, userName: String): String {
         userDetails(gameId, userName)
         section {
             id = SCORE
-            hxGet("/poker/${gameId}/${SCORE}?userName=${userName}")
+            hxGet("/${gameId}/${SCORE}?userName=${userName}")
             hxTrigger("load, every 2s")
             hxSwap("innerHTML")
         }

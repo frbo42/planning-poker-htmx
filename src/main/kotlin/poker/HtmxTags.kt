@@ -3,7 +3,7 @@ package poker
 import kotlinx.html.HTMLTag
 
 fun HTMLTag.hxGet(value: String) {
-    attributes["hx-get"] = value
+    attributes["hx-get"] = "/poker${value}"
 }
 
 fun HTMLTag.hxPost(value: String) {
