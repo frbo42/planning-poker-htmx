@@ -278,6 +278,7 @@ private fun HEAD.styles() {
 
 private fun HEAD.htmxScript() {
     script {
-        src = "https://unpkg.com/htmx.org@2.0.1"
+        src = "/js/htmx.min.js"
+//        src = "https://unpkg.com/htmx.org@2.0.3"
     }
 }
