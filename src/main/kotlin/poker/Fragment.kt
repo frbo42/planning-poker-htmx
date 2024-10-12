@@ -37,6 +37,7 @@ fun home(): String {
             id = BODY
             headerBody()
             main {
+                classes = setOf("container")
                 section {
                     id = MAIN
                     inputGameIdFragment()
@@ -62,6 +63,7 @@ fun homeUserFragment(gameId: String): String {
             id = BODY
             headerBody(gameId)
             main {
+                classes = setOf("container")
                 section {
                     id = MAIN
                     inputUser(gameId)
@@ -150,6 +152,7 @@ fun inputUserFragment(gameId: String): String {
         id = BODY
         headerBody(gameId)
         main {
+            classes = setOf("container")
             section {
                 id = MAIN
                 userInputFragment(gameId)
@@ -218,6 +221,7 @@ fun mainPage(gameId: String, userName: String): String {
         id = BODY
         headerBody(gameId, userName)
         main {
+            classes = setOf("container")
             section {
                 id = SCORE
                 hxGet("/${gameId}/${SCORE}?userName=${userName}")
