@@ -8,16 +8,19 @@ import kotlinx.html.stream.createHTML
 const val SCORE = "score"
 const val SET_USER = "setUser"
 const val SELECT_CARD = "/selectCard"
+const val SET_GAME_ID = "/setGameId"
 
 private const val CARDS = "cards"
 private const val GAME = "game"
 private const val GAME_ID = "gameId"
 private const val MAIN = "main"
+private const val BODY = "body"
 private const val TITLE = "Planning Poker"
+
+
 private const val USER_NAME = "userName"
 
-
-fun HTML.header() {
+fun HTML.htmlHeader() {
     head {
         title { +TITLE }
         htmxScript()
@@ -29,9 +32,14 @@ fun HTML.header() {
 fun home(): String {
     return createHTMLDocument().html {
         lang = "en"
-        header()
+        htmlHeader()
         body {
-            h1 { +TITLE }
+            header {
+                h1 { +TITLE }
+                hGroup {
+                    id = "userDetails"
+                }
+            }
             section {
                 id = MAIN
                 inputGameIdFragment()
@@ -43,9 +51,16 @@ fun home(): String {
 fun homeUserFragment(gameId: String): String {
     return createHTMLDocument().html {
         lang = "en"
-        header()
+        htmlHeader()
         body {
-            h1 { +TITLE }
+            id = BODY
+            header {
+                h1 { +TITLE }
+                hGroup {
+                    id = "userDetails"
+                    userDetails(gameId, null)
+                }
+            }
             section {
                 id = MAIN
                 inputUser(gameId)
@@ -54,14 +69,12 @@ fun homeUserFragment(gameId: String): String {
     }.serialize()
 }
 
-const val SET_GAME_ID = "/setGameId"
-
 private fun SECTION.inputGameIdFragment() {
     section {
         form {
             hxPost(SET_GAME_ID)
             hxTrigger("submit")
-            hxTargetId(MAIN)
+            hxTarget(BODY)
             hxSwap("innerHTML")
             label {
                 htmlFor = GAME_ID
@@ -89,12 +102,10 @@ fun SECTION.inputUser(gameId: String) {
 }
 
 private fun SECTION.userInputFragment(gameId: String) {
-    userDetails(gameId, null)
-
     form {
         hxPost("/${gameId}/${SET_USER}")
         hxTrigger("submit")
-        hxTargetId(MAIN)
+        hxTarget(MAIN)
         hxSwap("innerHTML")
         hxPushUrl("/poker/${gameId}")
         label {
@@ -115,8 +126,19 @@ private fun SECTION.userInputFragment(gameId: String) {
 }
 
 fun inputUserFragment(gameId: String): String {
-    return createHTML().section {
-        userInputFragment(gameId)
+    return createHTML().body {
+        id = BODY
+        header {
+            h1 { +TITLE }
+            hGroup {
+                id = "userDetails"
+                userDetails(gameId, null)
+            }
+        }
+        section {
+            id = MAIN
+            userInputFragment(gameId)
+        }
     }
 }
 
@@ -204,6 +226,20 @@ fun mainPage(gameId: String, userName: String): String {
 }
 
 private fun SECTION.userDetails(gameId: String, userName: String?) {
+    div {
+        classes = setOf("top-right")
+        p {
+            +"Game: $gameId"
+        }
+        userName?.let {
+            p {
+                +"User: $userName"
+            }
+        }
+    }
+}
+
+private fun HGROUP.userDetails(gameId: String, userName: String?) {
     div {
         classes = setOf("top-right")
         p {
