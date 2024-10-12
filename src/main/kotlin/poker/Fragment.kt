@@ -36,9 +36,11 @@ fun home(): String {
         body {
             id = BODY
             headerBody()
-            section {
-                id = MAIN
-                inputGameIdFragment()
+            main {
+                section {
+                    id = MAIN
+                    inputGameIdFragment()
+                }
             }
         }
     }.serialize()
@@ -46,6 +48,7 @@ fun home(): String {
 
 private fun BODY.headerBody(gameId: String? = null, userName: String? = null) {
     header {
+        classes = setOf("container")
         h1 { +TITLE }
         userDetailHGroup(gameId, userName)
     }
@@ -58,9 +61,11 @@ fun homeUserFragment(gameId: String): String {
         body {
             id = BODY
             headerBody(gameId)
-            section {
-                id = MAIN
-                inputUser(gameId)
+            main {
+                section {
+                    id = MAIN
+                    inputUser(gameId)
+                }
             }
         }
     }.serialize()
@@ -68,9 +73,8 @@ fun homeUserFragment(gameId: String): String {
 
 private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
     hGroup {
-        id = "userDetails"
+        classes = setOf("align-right")
         div {
-            classes = setOf("top-right")
             gameId?.let {
                 p {
                     +"Game: $gameId"
@@ -145,9 +149,11 @@ fun inputUserFragment(gameId: String): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId)
-        section {
-            id = MAIN
-            userInputFragment(gameId)
+        main {
+            section {
+                id = MAIN
+                userInputFragment(gameId)
+            }
         }
     }
 }
@@ -211,26 +217,28 @@ fun mainPage(gameId: String, userName: String): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId, userName)
-        section {
-            id = SCORE
-            hxGet("/${gameId}/${SCORE}?userName=${userName}")
-            hxTrigger("load, every 2s")
-            hxSwap("innerHTML")
-        }
-        section {
-            button {
-                hxPost("/${gameId}/show?userName=${userName}")
-                hxTrigger("click")
-                hxTargetId(GAME)
-                hxSwap("outerHTML")
-                +"Show Cards"
-            }
-            button {
-                hxPost("/${gameId}/reset?userName=${userName}")
-                hxTrigger("click")
-                hxTargetId(GAME)
+        main {
+            section {
+                id = SCORE
+                hxGet("/${gameId}/${SCORE}?userName=${userName}")
+                hxTrigger("load, every 2s")
                 hxSwap("innerHTML")
-                +"Reset"
+            }
+            section {
+                button {
+                    hxPost("/${gameId}/show?userName=${userName}")
+                    hxTrigger("click")
+                    hxTargetId(GAME)
+                    hxSwap("outerHTML")
+                    +"Show Cards"
+                }
+                button {
+                    hxPost("/${gameId}/reset?userName=${userName}")
+                    hxTrigger("click")
+                    hxTargetId(GAME)
+                    hxSwap("innerHTML")
+                    +"Reset"
+                }
             }
         }
     }
@@ -256,10 +264,9 @@ private fun HEAD.styles() {
     style {
         unsafe {
             +"""
-                .top-right {
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
+                .align-right {
+                    display: flex;
+                    justify-content: flex-end;
                 }
                 """.trimIndent()
         }
