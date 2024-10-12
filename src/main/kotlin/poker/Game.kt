@@ -11,7 +11,7 @@ data class Game(
     }
 
     fun selectionState(userName: String, card: String): String {
-        return if (card == this.cards[userName]) "primary" else "secondary"
+        return if (card == this.cards[userName]) "contrast" else "outline contrast"
     }
 
     fun selectCard(userName: String, card: String) {

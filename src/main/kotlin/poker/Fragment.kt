@@ -179,7 +179,6 @@ fun gameFragment(userName: String, game: Game): String {
                 +"Cards"
             }
             div {
-                id = CARDS
                 buildCards(userName, game)
             }
         }
@@ -187,6 +186,8 @@ fun gameFragment(userName: String, game: Game): String {
 }
 
 private fun DIV.buildCards(userName: String, game: Game) {
+    id = CARDS
+    classes = setOf("card-stack")
     Game.cards.forEach {
         button {
             classes = setOf(game.selectionState(userName, it))
@@ -201,7 +202,6 @@ private fun DIV.buildCards(userName: String, game: Game) {
 
 fun cards(userName: String, game: Game): String {
     return createHTML().div {
-        id = CARDS
         buildCards(userName, game)
     }
 }
@@ -218,6 +218,7 @@ fun mainPage(gameId: String, userName: String): String {
                 hxSwap("innerHTML")
             }
             section {
+                classes = setOf("button-bar")
                 button {
                     hxPost("/${gameId}/show?userName=${userName}")
                     hxTrigger("click")
@@ -230,6 +231,7 @@ fun mainPage(gameId: String, userName: String): String {
                     hxTrigger("click")
                     hxTargetId(GAME)
                     hxSwap("innerHTML")
+                    classes = setOf("secondary")
                     +"Reset"
                 }
             }
@@ -260,6 +262,14 @@ private fun HEAD.styles() {
                 .align-right {
                     display: flex;
                     justify-content: flex-end;
+                }
+                .button-bar {
+                    display: flex;
+                    gap: 1rem;
+                }
+                .card-stack {
+                    display: flex;
+                    gap: 1rem;
                 }
                 """.trimIndent()
         }
