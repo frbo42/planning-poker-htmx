@@ -13,7 +13,7 @@ const val SET_GAME_ID = "/setGameId"
 private const val CARDS = "cards"
 private const val GAME = "game"
 private const val GAME_ID = "gameId"
-private const val MAIN = "main"
+private const val MAIN_ID = "main"
 private const val BODY = "body"
 private const val TITLE = "Planning Poker"
 
@@ -36,57 +36,19 @@ fun home(): String {
         body {
             id = BODY
             headerBody()
-            main {
-                classes = setOf("container")
-                section {
-                    id = MAIN
-                    inputGameIdFragment()
-                }
+            mainBody {
+                inputGameIdFragment()
             }
         }
     }.serialize()
 }
 
-private fun BODY.headerBody(gameId: String? = null, userName: String? = null) {
-    header {
+private fun BODY.mainBody(content: SECTION.() -> Unit) {
+    main {
         classes = setOf("container")
-        h1 { +TITLE }
-        userDetailHGroup(gameId, userName)
-    }
-}
-
-fun homeUserFragment(gameId: String): String {
-    return createHTMLDocument().html {
-        lang = "en"
-        htmlHeader()
-        body {
-            id = BODY
-            headerBody(gameId)
-            main {
-                classes = setOf("container")
-                section {
-                    id = MAIN
-                    inputUser(gameId)
-                }
-            }
-        }
-    }.serialize()
-}
-
-private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
-    hGroup {
-        classes = setOf("align-right")
-        div {
-            gameId?.let {
-                p {
-                    +"Game: $gameId"
-                }
-            }
-            userName?.let {
-                p {
-                    +"User: $userName"
-                }
-            }
+        section {
+            id = MAIN_ID
+            content()
         }
     }
 }
@@ -112,6 +74,46 @@ private fun SECTION.inputGameIdFragment() {
             button {
                 type = ButtonType.submit
                 +"Submit Game"
+            }
+        }
+    }
+}
+
+private fun BODY.headerBody(gameId: String? = null, userName: String? = null) {
+    header {
+        classes = setOf("container")
+        h1 { +TITLE }
+        userDetailHGroup(gameId, userName)
+    }
+}
+
+fun homeUserFragment(gameId: String): String {
+    return createHTMLDocument().html {
+        lang = "en"
+        htmlHeader()
+        body {
+            id = BODY
+            headerBody(gameId)
+            mainBody {
+                inputUser(gameId)
+            }
+        }
+    }.serialize()
+}
+
+private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
+    hGroup {
+        classes = setOf("align-right")
+        div {
+            gameId?.let {
+                p {
+                    +"Game: $gameId"
+                }
+            }
+            userName?.let {
+                p {
+                    +"User: $userName"
+                }
             }
         }
     }
@@ -151,12 +153,8 @@ fun inputUserFragment(gameId: String): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId)
-        main {
-            classes = setOf("container")
-            section {
-                id = MAIN
-                userInputFragment(gameId)
-            }
+        mainBody {
+            userInputFragment(gameId)
         }
     }
 }
@@ -220,8 +218,7 @@ fun mainPage(gameId: String, userName: String): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId, userName)
-        main {
-            classes = setOf("container")
+        mainBody {
             section {
                 id = SCORE
                 hxGet("/${gameId}/${SCORE}?userName=${userName}")
