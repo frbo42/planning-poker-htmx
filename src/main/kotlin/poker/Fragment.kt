@@ -105,7 +105,7 @@ private fun SECTION.userInputFragment(gameId: String) {
     form {
         hxPost("/${gameId}/${SET_USER}")
         hxTrigger("submit")
-        hxTarget(MAIN)
+        hxTarget(BODY)
         hxSwap("innerHTML")
         hxPushUrl("/poker/${gameId}")
         label {
@@ -198,8 +198,15 @@ fun cards(userName: String, game: Game): String {
 }
 
 fun mainPage(gameId: String, userName: String): String {
-    return createHTML().section {
-        userDetails(gameId, userName)
+    return createHTML().body {
+        id = BODY
+        header {
+            h1 { +TITLE }
+            hGroup {
+                id = "userDetails"
+                userDetails(gameId, userName)
+            }
+        }
         section {
             id = SCORE
             hxGet("/${gameId}/${SCORE}?userName=${userName}")
