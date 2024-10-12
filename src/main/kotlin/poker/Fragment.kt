@@ -34,10 +34,8 @@ fun home(): String {
         lang = "en"
         htmlHeader()
         body {
-            header {
-                h1 { +TITLE }
-                userDetailHGroup(null, null)
-            }
+            id = BODY
+            headerBody()
             section {
                 id = MAIN
                 inputGameIdFragment()
@@ -46,16 +44,20 @@ fun home(): String {
     }.serialize()
 }
 
+private fun BODY.headerBody(gameId: String? = null, userName: String? = null) {
+    header {
+        h1 { +TITLE }
+        userDetailHGroup(gameId, userName)
+    }
+}
+
 fun homeUserFragment(gameId: String): String {
     return createHTMLDocument().html {
         lang = "en"
         htmlHeader()
         body {
             id = BODY
-            header {
-                h1 { +TITLE }
-                userDetailHGroup(gameId, null)
-            }
+            headerBody(gameId)
             section {
                 id = MAIN
                 inputUser(gameId)
@@ -142,10 +144,7 @@ private fun SECTION.userInputFragment(gameId: String) {
 fun inputUserFragment(gameId: String): String {
     return createHTML().body {
         id = BODY
-        header {
-            h1 { +TITLE }
-            userDetailHGroup(gameId, null)
-        }
+        headerBody(gameId)
         section {
             id = MAIN
             userInputFragment(gameId)
@@ -211,10 +210,7 @@ fun cards(userName: String, game: Game): String {
 fun mainPage(gameId: String, userName: String): String {
     return createHTML().body {
         id = BODY
-        header {
-            h1 { +TITLE }
-            userDetailHGroup(gameId, userName)
-        }
+        headerBody(gameId, userName)
         section {
             id = SCORE
             hxGet("/${gameId}/${SCORE}?userName=${userName}")
