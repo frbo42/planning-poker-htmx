@@ -253,8 +253,8 @@ private fun HEAD.metas() {
 private fun HEAD.styles() {
     link {
         rel = "stylesheet"
-        href = "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
-//            href = "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
+        href = "/css/pico.min.css"
+//        href = "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     }
     style {
         unsafe {
