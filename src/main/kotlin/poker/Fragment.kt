@@ -54,27 +54,25 @@ private fun BODY.mainBody(content: SECTION.() -> Unit) {
 }
 
 private fun SECTION.inputGameIdFragment() {
-    section {
-        form {
-            hxPost(SET_GAME_ID)
-            hxTrigger("submit")
-            hxTarget(BODY)
-            hxSwap("innerHTML")
-            label {
-                htmlFor = GAME_ID
-                +"Game Id"
-            }
-            input {
-                id = GAME_ID
-                type = InputType.text
-                name = GAME_ID
-                placeholder = "Enter game id"
-                required = true
-            }
-            button {
-                type = ButtonType.submit
-                +"Submit Game"
-            }
+    form {
+        hxPost(SET_GAME_ID)
+        hxTrigger("submit")
+        hxTarget(BODY)
+        hxSwap("innerHTML")
+        label {
+            htmlFor = GAME_ID
+            +"Game Id"
+        }
+        input {
+            id = GAME_ID
+            type = InputType.text
+            name = GAME_ID
+            placeholder = "Enter game id"
+            required = true
+        }
+        button {
+            type = ButtonType.submit
+            +"Submit Game"
         }
     }
 }
@@ -95,7 +93,7 @@ fun homeUserFragment(gameId: String): String {
             id = BODY
             headerBody(gameId)
             mainBody {
-                inputUser(gameId)
+                userInputFragment(gameId)
             }
         }
     }.serialize()
@@ -116,12 +114,6 @@ private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
                 }
             }
         }
-    }
-}
-
-fun SECTION.inputUser(gameId: String) {
-    section {
-        userInputFragment(gameId)
     }
 }
 
