@@ -36,9 +36,7 @@ fun home(): String {
         body {
             header {
                 h1 { +TITLE }
-                hGroup {
-                    id = "userDetails"
-                }
+                userDetailHGroup(null, null)
             }
             section {
                 id = MAIN
@@ -56,10 +54,7 @@ fun homeUserFragment(gameId: String): String {
             id = BODY
             header {
                 h1 { +TITLE }
-                hGroup {
-                    id = "userDetails"
-                    userDetails(gameId, null)
-                }
+                userDetailHGroup(gameId, null)
             }
             section {
                 id = MAIN
@@ -67,6 +62,25 @@ fun homeUserFragment(gameId: String): String {
             }
         }
     }.serialize()
+}
+
+private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
+    hGroup {
+        id = "userDetails"
+        div {
+            classes = setOf("top-right")
+            gameId?.let {
+                p {
+                    +"Game: $gameId"
+                }
+            }
+            userName?.let {
+                p {
+                    +"User: $userName"
+                }
+            }
+        }
+    }
 }
 
 private fun SECTION.inputGameIdFragment() {
@@ -130,10 +144,7 @@ fun inputUserFragment(gameId: String): String {
         id = BODY
         header {
             h1 { +TITLE }
-            hGroup {
-                id = "userDetails"
-                userDetails(gameId, null)
-            }
+            userDetailHGroup(gameId, null)
         }
         section {
             id = MAIN
@@ -202,10 +213,7 @@ fun mainPage(gameId: String, userName: String): String {
         id = BODY
         header {
             h1 { +TITLE }
-            hGroup {
-                id = "userDetails"
-                userDetails(gameId, userName)
-            }
+            userDetailHGroup(gameId, userName)
         }
         section {
             id = SCORE
@@ -227,34 +235,6 @@ fun mainPage(gameId: String, userName: String): String {
                 hxTargetId(GAME)
                 hxSwap("innerHTML")
                 +"Reset"
-            }
-        }
-    }
-}
-
-private fun SECTION.userDetails(gameId: String, userName: String?) {
-    div {
-        classes = setOf("top-right")
-        p {
-            +"Game: $gameId"
-        }
-        userName?.let {
-            p {
-                +"User: $userName"
-            }
-        }
-    }
-}
-
-private fun HGROUP.userDetails(gameId: String, userName: String?) {
-    div {
-        classes = setOf("top-right")
-        p {
-            +"Game: $gameId"
-        }
-        userName?.let {
-            p {
-                +"User: $userName"
             }
         }
     }
