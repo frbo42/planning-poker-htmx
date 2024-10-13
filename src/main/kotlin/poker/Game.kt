@@ -13,10 +13,9 @@ data class Game(
     var show: Boolean = false,
     val cards: MutableMap<String, Hand> = ConcurrentHashMap()
 ) {
-    private val userCleaner = AsyncCleaner(cards)
+    private val userCleaner = AsyncUserCleaner(cards)
 
     fun addUser(userName: String) {
-        println(userName + cards)
         cards.putIfAbsent(userName, Hand(null))
     }
 
@@ -54,7 +53,7 @@ data class Game(
 }
 
 
-class AsyncCleaner(private val cards: MutableMap<String, Hand>) {
+class AsyncUserCleaner(private val cards: MutableMap<String, Hand>) {
     private val isRunning = AtomicBoolean(false)
     private val WAIT_TIME = 10_000
     private var lastCall: Long = 0
