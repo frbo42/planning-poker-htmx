@@ -105,12 +105,18 @@ private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
         div {
             gameId?.let {
                 p {
-                    +"Game: $gameId"
+                    a {
+                        href = "/poker"
+                        +"Game: $gameId"
+                    }
                 }
             }
             userName?.let {
                 p {
-                    +"User: $userName"
+                    a {
+                        href = "/poker/$gameId"
+                        +"User: $userName"
+                    }
                 }
             }
         }
