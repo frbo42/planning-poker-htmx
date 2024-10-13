@@ -153,9 +153,9 @@ fun inputUserFragment(gameId: String): String {
 
 private fun userState(userName: String, game: Game): String {
     return if (game.show) {
-        "$userName played: ${game.cards[userName]}"
+        "$userName played: ${game.cards[userName]?.card}"
     } else {
-        if (game.cards[userName] == null) {
+        if (game.cards[userName]?.card == null) {
             "$userName still thinking"
         } else {
             "$userName ready"

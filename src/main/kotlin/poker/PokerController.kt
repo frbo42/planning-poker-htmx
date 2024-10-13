@@ -34,7 +34,7 @@ class PokerController(
 
     @GetMapping("/{gameId}/$SCORE")
     fun getScore(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
-        val game = service.getGame(gameId)
+        val game = service.getScore(gameId, userName)
         return gameFragment(userName, game)
     }
 

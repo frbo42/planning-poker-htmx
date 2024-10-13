@@ -40,4 +40,12 @@ class GameService {
 
         return game
     }
+
+    fun getScore(gameId: String, userName: String): Game {
+        val game = getGame(gameId)
+
+        game.ping(userName)
+
+        return game
+    }
 }
