@@ -23,7 +23,6 @@ class PokerController(
 
     @PostMapping(SET_GAME_ID)
     fun setGameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
-        service.createGame(gameId)
         return inputUserFragment(gameId)
     }
 
@@ -45,22 +44,22 @@ class PokerController(
         @RequestParam(name = "selectedCard") selectedCard: String,
         @RequestParam(name = "userName") userName: String
     ): String {
-        val game = service.getGame(gameId)
-        game.selectCard(userName, selectedCard)
+        val game = service.selectCard(gameId, userName, selectedCard)
+
         return cards(userName, game)
     }
 
     @PostMapping("/{gameId}/show")
     fun show(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
-        val game = service.getGame(gameId)
-        game.show = true
+        val game = service.show(gameId)
+
         return gameFragment(userName, game)
     }
 
     @PostMapping("/{gameId}/reset")
     fun reset(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
-        val game = service.getGame(gameId)
-        game.reset()
+        val game = service.reset(gameId)
+
         return gameFragment(userName, game)
     }
 }

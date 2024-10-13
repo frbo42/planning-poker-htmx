@@ -7,24 +7,37 @@ class GameService {
 
     val games = mutableMapOf<String, Game>()
 
-    fun createGame(gameId: String) {
-        if (!games.containsKey(gameId)) {
-            games[gameId] = Game(gameId)
-        }
-    }
-
     fun addUser(gameId: String, userName: String) {
-        if (!games.containsKey(gameId)) {
-            createGame(gameId)
-        }
+        val game = getGame(gameId)
 
-        games[gameId]?.addUser(userName)
+        game.addUser(userName)
     }
 
     fun getGame(gameId: String): Game {
-        if (!games.containsKey(gameId)) {
-            createGame(gameId)
-        }
-        return games[gameId]!!
+        return games.getOrPut(gameId) { Game(gameId) }
+    }
+
+    fun selectCard(gameId: String, userName: String, selectedCard: String): Game {
+        val game = getGame(gameId)
+
+        game.selectCard(userName, selectedCard)
+
+        return game;
+    }
+
+    fun show(gameId: String): Game {
+        val game = getGame(gameId)
+
+        game.show()
+
+        return game
+    }
+
+    fun reset(gameId: String): Game {
+        val game = getGame(gameId)
+
+        game.reset()
+
+        return game
     }
 }

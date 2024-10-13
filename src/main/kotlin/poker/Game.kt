@@ -18,6 +18,10 @@ data class Game(
         cards[userName] = card
     }
 
+    fun show() {
+        show = true
+    }
+
     fun reset() {
         show = false
         cards.keys.forEach {
@@ -26,7 +30,7 @@ data class Game(
     }
 
     fun users(): List<String> {
-        return cards.keys.sorted();
+        return cards.keys.sorted()
     }
 
     companion object {
