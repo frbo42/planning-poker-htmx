@@ -77,7 +77,7 @@ private fun SECTION.inputGameIdFragment() {
     }
 }
 
-private fun BODY.headerBody(gameId: String? = null, userName: UserName? = null) {
+private fun BODY.headerBody(gameId: ProjectId? = null, userName: UserName? = null) {
     header {
         classes = setOf("container")
         h1 { +TITLE }
@@ -85,7 +85,7 @@ private fun BODY.headerBody(gameId: String? = null, userName: UserName? = null) 
     }
 }
 
-fun homeUserFragment(gameId: String): String {
+fun homeUserFragment(gameId: ProjectId): String {
     return createHTMLDocument().html {
         lang = "en"
         htmlHeader()
@@ -99,7 +99,7 @@ fun homeUserFragment(gameId: String): String {
     }.serialize()
 }
 
-private fun HEADER.userDetailHGroup(gameId: String?, userName: UserName?) {
+private fun HEADER.userDetailHGroup(gameId: ProjectId?, userName: UserName?) {
     hGroup {
         classes = setOf("align-right")
         div {
@@ -123,7 +123,7 @@ private fun HEADER.userDetailHGroup(gameId: String?, userName: UserName?) {
     }
 }
 
-private fun SECTION.userInputFragment(gameId: String) {
+private fun SECTION.userInputFragment(gameId: ProjectId) {
     form {
         hxPost("/${gameId}/${SET_USER}")
         hxTrigger("submit")
@@ -147,7 +147,7 @@ private fun SECTION.userInputFragment(gameId: String) {
     }
 }
 
-fun inputUserFragment(gameId: String): String {
+fun inputUserFragment(gameId: ProjectId): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId)
@@ -164,7 +164,7 @@ fun gameFragment(userName: UserName, game: Game): String {
             h2 { +"Users" }
             game.users().forEach {
                 p {
-                    +"${it.name} "
+                    +"${it} "
                     button {
                         classes = setOf(game.userState(it))
                         +game.cardValue(it)
@@ -204,7 +204,7 @@ fun cards(userName: UserName, game: Game): String {
     }
 }
 
-fun mainPage(gameId: String, userName: UserName): String {
+fun mainPage(gameId: ProjectId, userName: UserName): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId, userName)

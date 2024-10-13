@@ -13,7 +13,7 @@ data class Hand(val card: String?, val lastAccess: Long = System.currentTimeMill
 private val collator = Collator.getInstance(Locale.GERMANY)
 
 @JvmInline
-value class UserName(val name: String) : Comparable<UserName> {
+value class UserName(private val name: String) : Comparable<UserName> {
 
     override fun compareTo(other: UserName): Int {
         return collator.compare(name, other.name)
@@ -22,11 +22,17 @@ value class UserName(val name: String) : Comparable<UserName> {
     override fun toString(): String {
         return name
     }
+}
 
+@JvmInline
+value class ProjectId(private val id: String) {
+    override fun toString(): String {
+        return id
+    }
 }
 
 data class Game(
-    val gamId: String,
+    val gamId: ProjectId,
     var show: Boolean = false,
     val cards: MutableMap<UserName, Hand> = ConcurrentHashMap()
 ) {
