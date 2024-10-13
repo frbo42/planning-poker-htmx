@@ -1,6 +1,5 @@
 package poker
 
-import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
@@ -22,18 +21,18 @@ class PokerController(
     }
 
     @PostMapping(SET_GAME_ID)
-    fun setGameId(@RequestParam("gameId") gameId: String, response: HttpServletResponse): String {
+    fun setGameId(@RequestParam("gameId") gameId: String): String {
         return inputUserFragment(gameId)
     }
 
     @PostMapping("{gameId}/$SET_USER")
-    fun setUser(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
+    fun setUser(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: UserName): String {
         service.addUser(gameId, userName)
         return mainPage(gameId, userName)
     }
 
     @GetMapping("/{gameId}/$SCORE")
-    fun getScore(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: String): String {
+    fun getScore(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: UserName): String {
         val game = service.getScore(gameId, userName)
         return gameFragment(userName, game)
     }
@@ -42,7 +41,7 @@ class PokerController(
     fun selectCard(
         @PathVariable("gameId") gameId: String,
         @RequestParam(name = "selectedCard") selectedCard: String,
-        @RequestParam(name = "userName") userName: String
+        @RequestParam(name = "userName") userName: UserName
     ): String {
         val game = service.selectCard(gameId, userName, selectedCard)
 
@@ -50,14 +49,14 @@ class PokerController(
     }
 
     @PostMapping("/{gameId}/show")
-    fun show(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
+    fun show(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: UserName): String {
         val game = service.show(gameId)
 
         return gameFragment(userName, game)
     }
 
     @PostMapping("/{gameId}/reset")
-    fun reset(@PathVariable("gameId")gameId: String, @RequestParam(name = "userName") userName: String): String {
+    fun reset(@PathVariable("gameId") gameId: String, @RequestParam(name = "userName") userName: UserName): String {
         val game = service.reset(gameId)
 
         return gameFragment(userName, game)

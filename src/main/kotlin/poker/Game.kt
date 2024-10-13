@@ -3,27 +3,44 @@ package poker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.text.Collator
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 data class Hand(val card: String?, val lastAccess: Long = System.currentTimeMillis())
 
+private val collator = Collator.getInstance(Locale.GERMANY)
+
+@JvmInline
+value class UserName(val name: String) : Comparable<UserName> {
+
+    override fun compareTo(other: UserName): Int {
+        return collator.compare(name, other.name)
+    }
+
+    override fun toString(): String {
+        return name
+    }
+
+}
+
 data class Game(
     val gamId: String,
     var show: Boolean = false,
-    val cards: MutableMap<String, Hand> = ConcurrentHashMap()
+    val cards: MutableMap<UserName, Hand> = ConcurrentHashMap()
 ) {
     private val userCleaner = AsyncUserCleaner(cards)
 
-    fun addUser(userName: String) {
+    fun addUser(userName: UserName) {
         cards.putIfAbsent(userName, Hand(null))
     }
 
-    fun selectionState(userName: String, card: String): String {
+    fun selectionState(userName: UserName, card: String): String {
         return if (card == this.cards[userName]?.card) "contrast" else "outline contrast"
     }
 
-    fun selectCard(userName: String, card: String) {
+    fun selectCard(userName: UserName, card: String) {
         cards[userName] = Hand(card)
     }
 
@@ -38,16 +55,16 @@ data class Game(
         }
     }
 
-    fun users(): List<String> {
+    fun users(): List<UserName> {
         return cards.keys.sorted()
     }
 
-    fun ping(userName: String) {
+    fun ping(userName: UserName) {
         cards[userName] = Hand(cards[userName]?.card)
         userCleaner.cleanUsers()
     }
 
-    fun cardValue(userName: String): String {
+    fun cardValue(userName: UserName): String {
         if (!show) {
             return "\uD83C\uDCA0"
         }
@@ -55,7 +72,7 @@ data class Game(
         return cards[userName]?.card ?: return "X"
     }
 
-    fun userState(userName: String): String {
+    fun userState(userName: UserName): String {
         if (show) {
             return "Contrast outline"
         }
@@ -71,7 +88,7 @@ data class Game(
 }
 
 
-class AsyncUserCleaner(private val cards: MutableMap<String, Hand>) {
+class AsyncUserCleaner(private val cards: MutableMap<UserName, Hand>) {
     private val isRunning = AtomicBoolean(false)
     private var lastCall: Long = 0
 

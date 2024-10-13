@@ -13,7 +13,7 @@ class GameService {
     val games = ConcurrentHashMap<String, Game>()
     val asyncCleaner = AsyncGameCleaner(games)
 
-    fun addUser(gameId: String, userName: String) {
+    fun addUser(gameId: String, userName: UserName) {
         val game = getGame(gameId)
 
         game.addUser(userName)
@@ -23,7 +23,7 @@ class GameService {
         return games.getOrPut(gameId) { Game(gameId) }
     }
 
-    fun selectCard(gameId: String, userName: String, selectedCard: String): Game {
+    fun selectCard(gameId: String, userName: UserName, selectedCard: String): Game {
         val game = getGame(gameId)
 
         game.selectCard(userName, selectedCard)
@@ -47,7 +47,7 @@ class GameService {
         return game
     }
 
-    fun getScore(gameId: String, userName: String): Game {
+    fun getScore(gameId: String, userName: UserName): Game {
         val game = getGame(gameId)
         game.ping(userName)
 

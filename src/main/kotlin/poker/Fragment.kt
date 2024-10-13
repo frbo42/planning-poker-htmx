@@ -77,7 +77,7 @@ private fun SECTION.inputGameIdFragment() {
     }
 }
 
-private fun BODY.headerBody(gameId: String? = null, userName: String? = null) {
+private fun BODY.headerBody(gameId: String? = null, userName: UserName? = null) {
     header {
         classes = setOf("container")
         h1 { +TITLE }
@@ -99,7 +99,7 @@ fun homeUserFragment(gameId: String): String {
     }.serialize()
 }
 
-private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
+private fun HEADER.userDetailHGroup(gameId: String?, userName: UserName?) {
     hGroup {
         classes = setOf("align-right")
         div {
@@ -115,7 +115,7 @@ private fun HEADER.userDetailHGroup(gameId: String?, userName: String?) {
                 p {
                     a {
                         href = "/poker/$gameId"
-                        +"User: $userName"
+                        +"User: ${userName}"
                     }
                 }
             }
@@ -157,14 +157,14 @@ fun inputUserFragment(gameId: String): String {
     }
 }
 
-fun gameFragment(userName: String, game: Game): String {
+fun gameFragment(userName: UserName, game: Game): String {
     return createHTML().div {
         id = GAME
         section {
             h2 { +"Users" }
             game.users().forEach {
                 p {
-                    +"$it "
+                    +"${it.name} "
                     button {
                         classes = setOf(game.userState(it))
                         +game.cardValue(it)
@@ -183,7 +183,7 @@ fun gameFragment(userName: String, game: Game): String {
     }
 }
 
-private fun DIV.buildCards(userName: String, game: Game) {
+private fun DIV.buildCards(userName: UserName, game: Game) {
     id = CARDS
     classes = setOf("card-stack")
     Game.cards.forEach { card ->
@@ -198,13 +198,13 @@ private fun DIV.buildCards(userName: String, game: Game) {
     }
 }
 
-fun cards(userName: String, game: Game): String {
+fun cards(userName: UserName, game: Game): String {
     return createHTML().div {
         buildCards(userName, game)
     }
 }
 
-fun mainPage(gameId: String, userName: String): String {
+fun mainPage(gameId: String, userName: UserName): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId, userName)
