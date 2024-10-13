@@ -3,8 +3,6 @@ package poker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
@@ -46,9 +44,7 @@ data class Game(
     }
 
     fun ping(userName: String) {
-        println("ping: " + cards)
-        val hand = cards[userName]
-        cards[userName] = Hand(hand?.card)
+        cards[userName] = Hand(cards[userName]?.card)
         userCleaner.cleanUsers()
     }
 
@@ -61,35 +57,28 @@ data class Game(
 class AsyncCleaner(private val cards: MutableMap<String, Hand>) {
     private val isRunning = AtomicBoolean(false)
     private val WAIT_TIME = 10_000
-    private val formatter = DateTimeFormatter.ofPattern("HH:mm:ss")
     private var lastCall: Long = 0
 
     fun cleanUsers() {
         val currentTime = System.currentTimeMillis()
 
-        // Check if the process has been started in the last 10 seconds
-        if (currentTime - lastCall < WAIT_TIME) {
-            println("Process is already running, skipping this trigger." + LocalDateTime.now().format(formatter));
+        if (checkedInLast10Seconds(currentTime)) {
             return
         }
 
-        // Mark the time of the current call
         lastCall = currentTime
 
         if (isRunning.compareAndSet(false, true)) {
-            println("Starting the process..." + cards)
-
-            // Start an asynchronous process (simulate by delay)
-            CoroutineScope(Dispatchers.Default).launch {
-
-                cards.entries.removeIf { currentTime - it.value.lastAccess > 2 * WAIT_TIME }
-
-//                delay(2000L) // Simulating the process taking 2 seconds to complete
-                println("Process finished." + cards)
-                isRunning.set(false) // Allow future processes to start
-            }
-        } else {
-            println("Process is already running, skipping this trigger.")
+            startAsyncCheck(currentTime)
         }
     }
+
+    private fun startAsyncCheck(currentTime: Long) {
+        CoroutineScope(Dispatchers.Default).launch {
+            cards.entries.removeIf { currentTime - it.value.lastAccess > 2 * WAIT_TIME }
+            isRunning.set(false) // Allow future processes to start
+        }
+    }
+
+    private fun checkedInLast10Seconds(currentTime: Long) = currentTime - lastCall < WAIT_TIME
 }
