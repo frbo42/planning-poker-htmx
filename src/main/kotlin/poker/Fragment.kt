@@ -157,18 +157,6 @@ fun inputUserFragment(gameId: String): String {
     }
 }
 
-private fun userState(userName: String, game: Game): String {
-    return if (game.show) {
-        "$userName played: ${game.cards[userName]?.card}"
-    } else {
-        if (game.cards[userName]?.card == null) {
-            "$userName still thinking"
-        } else {
-            "$userName ready"
-        }
-    }
-}
-
 fun gameFragment(userName: String, game: Game): String {
     return createHTML().div {
         id = GAME
@@ -176,7 +164,11 @@ fun gameFragment(userName: String, game: Game): String {
             h2 { +"Users" }
             game.users().forEach {
                 p {
-                    +userState(it, game)
+                    +"$it "
+                    button {
+                        classes = setOf(game.userState(it))
+                        +game.cardValue(it)
+                    }
                 }
             }
         }

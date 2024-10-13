@@ -58,7 +58,6 @@ class GameService {
 
 class AsyncGameCleaner(private val games: MutableMap<String, Game>) {
     private val isRunning = AtomicBoolean(false)
-    private val WAIT_TIME = 10_000
     private var lastCall: Long = 0
 
     fun cleanGames() {
@@ -83,4 +82,8 @@ class AsyncGameCleaner(private val games: MutableMap<String, Game>) {
     }
 
     private fun checkedInLast10Seconds(currentTime: Long) = currentTime - lastCall < WAIT_TIME
+
+    companion object {
+        private const val WAIT_TIME = 10_000
+    }
 }

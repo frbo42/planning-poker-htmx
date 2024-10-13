@@ -47,6 +47,24 @@ data class Game(
         userCleaner.cleanUsers()
     }
 
+    fun cardValue(userName: String): String {
+        if (!show) {
+            return "\uD83C\uDCA0"
+        }
+
+        return cards[userName]?.card ?: return "X"
+    }
+
+    fun userState(userName: String): String {
+        if (show) {
+            return "Contrast outline"
+        }
+        if (cards[userName]?.card == null) {
+            return "secondary"
+        }
+        return "contrast"
+    }
+
     companion object {
         val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
     }
@@ -55,7 +73,6 @@ data class Game(
 
 class AsyncUserCleaner(private val cards: MutableMap<String, Hand>) {
     private val isRunning = AtomicBoolean(false)
-    private val WAIT_TIME = 10_000
     private var lastCall: Long = 0
 
     fun cleanUsers() {
@@ -75,9 +92,13 @@ class AsyncUserCleaner(private val cards: MutableMap<String, Hand>) {
     private fun startAsyncCheck(currentTime: Long) {
         CoroutineScope(Dispatchers.Default).launch {
             cards.entries.removeIf { currentTime - it.value.lastAccess > 2 * WAIT_TIME }
-            isRunning.set(false) // Allow future processes to start
+            isRunning.set(false)
         }
     }
 
     private fun checkedInLast10Seconds(currentTime: Long) = currentTime - lastCall < WAIT_TIME
+
+    companion object {
+        private const val WAIT_TIME = 10_000
+    }
 }
