@@ -168,7 +168,7 @@ fun gameFragment(userName: String, game: Game): String {
         id = GAME
         section {
             h2 { +"Users" }
-            game.cards.keys.forEach {
+            game.users().forEach {
                 p {
                     +userState(it, game)
                 }
@@ -188,14 +188,14 @@ fun gameFragment(userName: String, game: Game): String {
 private fun DIV.buildCards(userName: String, game: Game) {
     id = CARDS
     classes = setOf("card-stack")
-    Game.cards.forEach {
+    Game.cards.forEach { card ->
         button {
-            classes = setOf(game.selectionState(userName, it))
-            hxPost("/${game.gamId}${SELECT_CARD}?selectedCard=${it}&userName=${userName}")
+            classes = setOf(game.selectionState(userName, card))
+            hxPost("/${game.gamId}${SELECT_CARD}?selectedCard=${card}&userName=${userName}")
             hxTrigger("click")
             hxTargetId(CARDS)
             hxSwap("innerHTML")
-            +it
+            +card
         }
     }
 }

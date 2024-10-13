@@ -25,6 +25,10 @@ data class Game(
         }
     }
 
+    fun users(): List<String> {
+        return cards.keys.sorted();
+    }
+
     companion object {
         val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
     }
