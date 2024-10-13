@@ -115,7 +115,7 @@ private fun HEADER.userDetailHGroup(gameId: ProjectId?, userName: UserName?) {
                 p {
                     a {
                         href = "/poker/$gameId"
-                        +"User: ${userName}"
+                        +"User: $userName"
                     }
                 }
             }
@@ -164,7 +164,7 @@ fun gameFragment(userName: UserName, game: Game): String {
             h2 { +"Users" }
             game.users().forEach {
                 p {
-                    +"${it} "
+                    +"$it "
                     button {
                         classes = setOf(game.userState(it))
                         +game.cardValue(it)
