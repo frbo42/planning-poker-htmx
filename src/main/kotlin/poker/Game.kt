@@ -8,9 +8,10 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
-data class Hand(val card: String?, val lastAccess: Long = System.currentTimeMillis())
+private val collator = Collator.getInstance(Locale.GERMAN)
+private const val WAIT_TIME = 10_000
 
-private val collator = Collator.getInstance(Locale.GERMANY)
+data class Hand(val card: String?, val lastAccess: Long = System.currentTimeMillis())
 
 @JvmInline
 value class UserName(private val name: String) : Comparable<UserName> {
@@ -33,9 +34,10 @@ value class ProjectId(private val id: String) {
 
 data class Game(
     val gamId: ProjectId,
-    var show: Boolean = false,
-    val cards: MutableMap<UserName, Hand> = ConcurrentHashMap()
+    private var show: Boolean = false,
+    private val cards: MutableMap<UserName, Hand> = ConcurrentHashMap()
 ) {
+
     private val userCleaner = AsyncUserCleaner(cards)
 
     fun addUser(userName: UserName) {
@@ -88,6 +90,10 @@ data class Game(
         return "contrast"
     }
 
+    fun canBeRemoved(): Boolean {
+        return cards.all { inactiveFor20s(System.currentTimeMillis(), it.value) }
+    }
+
     companion object {
         val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
     }
@@ -114,14 +120,13 @@ class AsyncUserCleaner(private val cards: MutableMap<UserName, Hand>) {
 
     private fun startAsyncCheck(currentTime: Long) {
         CoroutineScope(Dispatchers.Default).launch {
-            cards.entries.removeIf { currentTime - it.value.lastAccess > 2 * WAIT_TIME }
+            cards.entries.removeIf { inactiveFor20s(currentTime, it.value) }
             isRunning.set(false)
         }
     }
 
-    private fun checkedInLast10Seconds(currentTime: Long) = currentTime - lastCall < WAIT_TIME
 
-    companion object {
-        private const val WAIT_TIME = 10_000
-    }
+    private fun checkedInLast10Seconds(currentTime: Long) = currentTime - lastCall < WAIT_TIME
 }
+
+private fun inactiveFor20s(currentTime: Long, hand: Hand) = currentTime - hand.lastAccess > 2 * WAIT_TIME

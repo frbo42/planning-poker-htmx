@@ -10,8 +10,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 @Service
 class GameService {
 
-    val games = ConcurrentHashMap<ProjectId, Game>()
-    val asyncCleaner = AsyncGameCleaner(games)
+    private final val games = ConcurrentHashMap<ProjectId, Game>()
+    private final val asyncCleaner = AsyncGameCleaner(games)
 
     fun addUser(gameId: ProjectId, userName: UserName) {
         val game = getGame(gameId)
@@ -28,7 +28,7 @@ class GameService {
 
         game.selectCard(userName, selectedCard)
 
-        return game;
+        return game
     }
 
     fun show(gameId: ProjectId): Game {
@@ -76,7 +76,7 @@ class AsyncGameCleaner(private val games: MutableMap<ProjectId, Game>) {
 
     private fun startAsyncCheck() {
         CoroutineScope(Dispatchers.Default).launch {
-            games.entries.removeIf { it.value.cards.isEmpty() }
+            games.entries.removeIf { it.value.canBeRemoved() }
             isRunning.set(false)
         }
     }
