@@ -162,15 +162,24 @@ fun gameFragment(userName: UserName, game: Game): String {
         id = GAME
         section {
             h2 { +"Users" }
-            game.users().forEach {
-                p {
-                    +"$it "
-                    button {
-                        classes = setOf(game.userState(it))
-                        +game.cardValue(it)
+
+            table {
+                game.users().forEach {
+                    tr {
+                        td {
+
+                            +"$it "
+                        }
+                        td {
+                            button {
+                                classes = setOf(game.userState(it))
+                                +game.cardValue(it)
+                            }
+                        }
                     }
                 }
             }
+
         }
         section {
             h2 {
