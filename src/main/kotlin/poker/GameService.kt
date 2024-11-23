@@ -10,20 +10,20 @@ import java.util.concurrent.atomic.AtomicBoolean
 @Service
 class GameService {
 
-    private final val games = ConcurrentHashMap<ProjectId, Game>()
+    private final val games = ConcurrentHashMap<GameId, Game>()
     private final val asyncCleaner = AsyncGameCleaner(games)
 
-    fun addUser(gameId: ProjectId, userName: UserName, observer: Boolean) {
+    fun addUser(gameId: GameId, userName: UserName, observer: Boolean) {
         val game = getGame(gameId)
 
         game.addUser(userName, observer)
     }
 
-    fun getGame(gameId: ProjectId): Game {
+    fun getGame(gameId: GameId): Game {
         return games.getOrPut(gameId) { Game(gameId) }
     }
 
-    fun selectCard(gameId: ProjectId, userName: UserName, selectedCard: String): Game {
+    fun selectCard(gameId: GameId, userName: UserName, selectedCard: String): Game {
         val game = getGame(gameId)
 
         game.selectCard(userName, selectedCard)
@@ -31,7 +31,7 @@ class GameService {
         return game
     }
 
-    fun show(gameId: ProjectId): Game {
+    fun show(gameId: GameId): Game {
         val game = getGame(gameId)
 
         game.show()
@@ -39,7 +39,7 @@ class GameService {
         return game
     }
 
-    fun reset(gameId: ProjectId): Game {
+    fun reset(gameId: GameId): Game {
         val game = getGame(gameId)
 
         game.reset()
@@ -47,7 +47,7 @@ class GameService {
         return game
     }
 
-    fun getScore(gameId: ProjectId, userName: UserName): Game {
+    fun getScore(gameId: GameId, userName: UserName): Game {
         val game = getGame(gameId)
         game.ping(userName)
 
@@ -56,7 +56,7 @@ class GameService {
     }
 }
 
-class AsyncGameCleaner(private val games: MutableMap<ProjectId, Game>) {
+class AsyncGameCleaner(private val games: MutableMap<GameId, Game>) {
     private val isRunning = AtomicBoolean(false)
     private var lastCall: Long = 0
 

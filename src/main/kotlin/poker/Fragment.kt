@@ -76,7 +76,7 @@ private fun SECTION.inputGameIdFragment() {
     }
 }
 
-private fun BODY.headerBody(gameId: ProjectId? = null, userName: UserName? = null) {
+private fun BODY.headerBody(gameId: GameId? = null, userName: UserName? = null) {
     header {
         classes = setOf("container")
         h1 { +TITLE }
@@ -84,7 +84,7 @@ private fun BODY.headerBody(gameId: ProjectId? = null, userName: UserName? = nul
     }
 }
 
-fun homeUserFragment(gameId: ProjectId): String {
+fun homeUserFragment(gameId: GameId): String {
     return createHTMLDocument().html {
         lang = "en"
         htmlHeader()
@@ -98,7 +98,7 @@ fun homeUserFragment(gameId: ProjectId): String {
     }.serialize()
 }
 
-private fun HEADER.userDetailHGroup(gameId: ProjectId?, userName: UserName?) {
+private fun HEADER.userDetailHGroup(gameId: GameId?, userName: UserName?) {
     hGroup {
         classes = setOf("align-right")
         div {
@@ -122,7 +122,7 @@ private fun HEADER.userDetailHGroup(gameId: ProjectId?, userName: UserName?) {
     }
 }
 
-private fun SECTION.userInputFragment(gameId: ProjectId) {
+private fun SECTION.userInputFragment(gameId: GameId) {
     form {
         hxPost("/${gameId}/${SET_USER}")
         hxTrigger("submit")
@@ -157,7 +157,7 @@ private fun SECTION.userInputFragment(gameId: ProjectId) {
     }
 }
 
-fun inputUserFragment(gameId: ProjectId): String {
+fun inputUserFragment(gameId: GameId): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId)
@@ -186,21 +186,27 @@ fun gameFragment(userName: UserName, game: Game): String {
                     game.userDisplay().forEach {
                         tr {
                             td {
-                                if (it.hasPlayer()) {
-                                    +"${it.playerName}"
-                                }
-                            }
-                            td {
-                                if (it.hasPlayer()) {
-                                    button {
-                                        classes = setOf(it.state)
-                                        +it.card
+                                when {
+                                    it.hasPlayer() -> {
+                                        +"${it.playerName}"
                                     }
                                 }
                             }
                             td {
-                                if (it.hasObserver()) {
-                                    +"${it.observerName}"
+                                when {
+                                    it.hasPlayer() -> {
+                                        button {
+                                            classes = setOf(it.state)
+                                            +it.card
+                                        }
+                                    }
+                                }
+                            }
+                            td {
+                                when {
+                                    it.hasObserver() -> {
+                                        +"${it.observerName}"
+                                    }
                                 }
                             }
                         }
@@ -243,7 +249,7 @@ fun cards(userName: UserName, game: Game): String {
     }
 }
 
-fun mainPage(gameId: ProjectId, userName: UserName): String {
+fun mainPage(gameId: GameId, userName: UserName): String {
     return createHTML().body {
         id = BODY
         headerBody(gameId, userName)

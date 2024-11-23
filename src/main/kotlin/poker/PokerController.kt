@@ -16,18 +16,18 @@ class PokerController(
     }
 
     @GetMapping(value = ["/{gameId}", "/{gameId}/"], produces = [MediaType.TEXT_HTML_VALUE])
-    fun getHomeWithGame(@PathVariable("gameId") gameId: ProjectId): String {
+    fun getHomeWithGame(@PathVariable("gameId") gameId: GameId): String {
         return homeUserFragment(gameId)
     }
 
     @PostMapping(SET_GAME_ID)
-    fun setGameId(@RequestParam("gameId") gameId: ProjectId): String {
+    fun setGameId(@RequestParam("gameId") gameId: GameId): String {
         return inputUserFragment(gameId)
     }
 
     @PostMapping("{gameId}/$SET_USER")
     fun setUser(
-        @PathVariable("gameId") gameId: ProjectId,
+        @PathVariable("gameId") gameId: GameId,
         @RequestParam(name = USER_NAME) userName: UserName,
         @RequestParam(name = "observer", required = false) observer: Boolean?
     ): String {
@@ -37,7 +37,7 @@ class PokerController(
 
     @GetMapping("/{gameId}/$SCORE")
     fun getScore(
-        @PathVariable("gameId") gameId: ProjectId,
+        @PathVariable("gameId") gameId: GameId,
         @RequestParam(name = USER_NAME) userName: UserName
     ): String {
         val game = service.getScore(gameId, userName)
@@ -46,7 +46,7 @@ class PokerController(
 
     @PostMapping("/{gameId}$SELECT_CARD")
     fun selectCard(
-        @PathVariable("gameId") gameId: ProjectId,
+        @PathVariable("gameId") gameId: GameId,
         @RequestParam(name = "selectedCard") selectedCard: String,
         @RequestParam(name = USER_NAME) userName: UserName
     ): String {
@@ -56,14 +56,14 @@ class PokerController(
     }
 
     @PostMapping("/{gameId}/show")
-    fun show(@PathVariable("gameId") gameId: ProjectId, @RequestParam(name = USER_NAME) userName: UserName): String {
+    fun show(@PathVariable("gameId") gameId: GameId, @RequestParam(name = USER_NAME) userName: UserName): String {
         val game = service.show(gameId)
 
         return gameFragment(userName, game)
     }
 
     @PostMapping("/{gameId}/reset")
-    fun reset(@PathVariable("gameId") gameId: ProjectId, @RequestParam(name = USER_NAME) userName: UserName): String {
+    fun reset(@PathVariable("gameId") gameId: GameId, @RequestParam(name = USER_NAME) userName: UserName): String {
         val game = service.reset(gameId)
 
         return gameFragment(userName, game)

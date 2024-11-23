@@ -6,7 +6,6 @@ import kotlinx.coroutines.launch
 import java.text.Collator
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CopyOnWriteArrayList
 import java.util.concurrent.atomic.AtomicBoolean
 
 private val collator = Collator.getInstance(Locale.GERMAN)
@@ -39,35 +38,41 @@ value class UserName(private val name: String) : Comparable<UserName> {
 }
 
 @JvmInline
-value class ProjectId(private val id: String) {
+value class GameId(private val id: String) {
     override fun toString(): String {
         return id
     }
 }
 
+data class Observer(var lastAccess: Long = System.currentTimeMillis()) {
+    fun ping() {
+        lastAccess = System.currentTimeMillis()
+    }
+}
+
 data class Game(
-    val gamId: ProjectId,
+    val gamId: GameId,
     private var show: Boolean = false,
-    private val cards: MutableMap<UserName, Hand> = ConcurrentHashMap(),
-    private val observers: MutableList<UserName> = CopyOnWriteArrayList(),
+    private val players: MutableMap<UserName, Hand> = ConcurrentHashMap(),
+    private val observers: MutableMap<UserName, Observer> = ConcurrentHashMap(),
 ) {
 
-    private val userCleaner = AsyncUserCleaner(cards)
+    private val userCleaner = AsyncUserCleaner(players,observers)
 
     fun addUser(userName: UserName, observer: Boolean) {
         if (observer) {
-            observers.add(userName)
+            observers.putIfAbsent(userName, Observer())
         } else {
-            cards.putIfAbsent(userName, Hand(null))
+            players.putIfAbsent(userName, Hand(null))
         }
     }
 
     fun selectionState(userName: UserName, card: String): String {
-        return if (card == this.cards[userName]?.card) "contrast" else "outline contrast"
+        return if (card == this.players[userName]?.card) "contrast" else "outline contrast"
     }
 
     fun selectCard(userName: UserName, card: String) {
-        cards[userName]?.card = card
+        players[userName]?.card = card
     }
 
     fun show() {
@@ -76,32 +81,32 @@ data class Game(
 
     fun reset() {
         show = false
-        cards.values.forEach { it.reset() }
+        players.values.forEach { it.reset() }
     }
 
     fun userDisplay(): List<Display> {
-        var sortedHand = cards.keys.sorted()
-        var sortedObservers = observers.sorted()
+        var sortedHand = players.keys.sorted()
+        var sortedObservers = observers.keys.sorted()
 
-        val size = Math.max(sortedHand.size, sortedObservers.size)
+        val size = sortedHand.size.coerceAtLeast(sortedObservers.size)
 
         val displays: MutableList<Display> = mutableListOf<Display>()
         for (i in 0 until size) {
-            val hand = sortedHand.getOrNull(i)
-            val observer = sortedObservers.getOrNull(i)
+            val playerName = sortedHand.getOrNull(i)
+            val observerName = sortedObservers.getOrNull(i)
             displays.add( Display(
-                hand,
-                userState(hand),
-                cardValue(hand),
-                observer
+                playerName,
+                userState(playerName),
+                cardValue(playerName),
+                observerName
             ))
         }
-        println(displays)
         return displays
     }
 
     fun ping(userName: UserName) {
-        cards[userName]?.ping()
+        players[userName]?.ping()
+        observers[userName]?.ping()
         userCleaner.cleanUsers()
     }
 
@@ -110,7 +115,7 @@ data class Game(
             return "\uD83C\uDCA0"
         }
 
-        return cards[userName]?.card ?: return "X"
+        return players[userName]?.card ?: return "X"
     }
 
     fun userState(userName: UserName?): String {
@@ -121,18 +126,20 @@ data class Game(
         if (show) {
             return "Contrast outline"
         }
-        if (cards[userName]?.card == null) {
+        if (players[userName]?.card == null) {
             return "secondary"
         }
         return "contrast"
     }
 
     fun canBeRemoved(): Boolean {
-        return cards.all { inactiveFor20s(System.currentTimeMillis(), it.value) }
+        var playersInactive = players.all { inactiveFor20s(System.currentTimeMillis(), it.value.lastAccess) }
+        var observersInactive = observers.all { inactiveFor20s(System.currentTimeMillis(), it.value.lastAccess) }
+        return playersInactive && observersInactive
     }
 
     fun isPlayer(userName: UserName): Boolean {
-       return cards.keys.contains(userName)
+       return players.keys.contains(userName)
     }
 
     companion object {
@@ -155,7 +162,7 @@ data class Display(
     }
 }
 
-class AsyncUserCleaner(private val cards: MutableMap<UserName, Hand>) {
+class AsyncUserCleaner(private val cards: MutableMap<UserName, Hand>,private val observers: MutableMap<UserName, Observer>) {
     private val isRunning = AtomicBoolean(false)
     private var lastCall: Long = 0
 
@@ -175,7 +182,8 @@ class AsyncUserCleaner(private val cards: MutableMap<UserName, Hand>) {
 
     private fun startAsyncCheck(currentTime: Long) {
         CoroutineScope(Dispatchers.Default).launch {
-            cards.entries.removeIf { inactiveFor20s(currentTime, it.value) }
+            cards.entries.removeIf { inactiveFor20s(currentTime, it.value.lastAccess) }
+            observers.entries.removeIf { inactiveFor20s(currentTime, it.value.lastAccess) }
             isRunning.set(false)
         }
     }
@@ -184,4 +192,4 @@ class AsyncUserCleaner(private val cards: MutableMap<UserName, Hand>) {
     private fun checkedInLast10Seconds(currentTime: Long) = currentTime - lastCall < WAIT_TIME
 }
 
-private fun inactiveFor20s(currentTime: Long, hand: Hand) = currentTime - hand.lastAccess > 2 * WAIT_TIME
+private fun inactiveFor20s(currentTime: Long, hand: Long) = currentTime - hand > 2 * WAIT_TIME
