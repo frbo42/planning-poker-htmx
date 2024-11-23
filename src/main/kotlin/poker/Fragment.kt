@@ -184,32 +184,7 @@ fun gameFragment(userName: UserName, game: Game): String {
 
                 tbody {
                     game.userDisplay().forEach {
-                        tr {
-                            td {
-                                when {
-                                    it.hasPlayer() -> {
-                                        +"${it.playerName}"
-                                    }
-                                }
-                            }
-                            td {
-                                when {
-                                    it.hasPlayer() -> {
-                                        button {
-                                            classes = setOf(it.state)
-                                            +it.card
-                                        }
-                                    }
-                                }
-                            }
-                            td {
-                                when {
-                                    it.hasObserver() -> {
-                                        +"${it.observerName}"
-                                    }
-                                }
-                            }
-                        }
+                        displayRow(it)
                     }
                 }
             }
@@ -222,6 +197,35 @@ fun gameFragment(userName: UserName, game: Game): String {
                 }
                 div {
                     buildCards(userName, game)
+                }
+            }
+        }
+    }
+}
+
+private fun TBODY.displayRow(display: Display) {
+    tr {
+        td {
+            when {
+                display.hasPlayer() -> {
+                    +"${display.playerName}"
+                }
+            }
+        }
+        td {
+            when {
+                display.hasPlayer() -> {
+                    button {
+                        classes = setOf(display.state)
+                        +display.card
+                    }
+                }
+            }
+        }
+        td {
+            when {
+                display.hasObserver() -> {
+                    +"${display.observerName}"
                 }
             }
         }
