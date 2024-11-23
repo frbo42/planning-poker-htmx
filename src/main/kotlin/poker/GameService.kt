@@ -13,10 +13,10 @@ class GameService {
     private final val games = ConcurrentHashMap<ProjectId, Game>()
     private final val asyncCleaner = AsyncGameCleaner(games)
 
-    fun addUser(gameId: ProjectId, userName: UserName) {
+    fun addUser(gameId: ProjectId, userName: UserName, observer: Boolean) {
         val game = getGame(gameId)
 
-        game.addUser(userName)
+        game.addUser(userName, observer)
     }
 
     fun getGame(gameId: ProjectId): Game {

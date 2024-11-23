@@ -9,6 +9,7 @@ const val SCORE = "score"
 const val SET_USER = "setUser"
 const val SELECT_CARD = "/selectCard"
 const val SET_GAME_ID = "/setGameId"
+const val USER_NAME = "userName"
 
 private const val CARDS = "cards"
 private const val GAME = "game"
@@ -17,8 +18,6 @@ private const val MAIN_ID = "main"
 private const val BODY = "body"
 private const val TITLE = "Planning Poker"
 
-
-private const val USER_NAME = "userName"
 
 fun HTML.htmlHeader() {
     head {
@@ -130,15 +129,26 @@ private fun SECTION.userInputFragment(gameId: ProjectId) {
         hxTarget(BODY)
         hxSwap("innerHTML")
         hxPushUrl("/poker/${gameId}")
-        label {
-            htmlFor = USER_NAME
-            +"User name"
-        }
-        input {
-            id = USER_NAME
-            type = InputType.text
-            name = "userName"
-            placeholder = "Enter username"
+        fieldSet {
+            label {
+                htmlFor = USER_NAME
+                +"User name"
+            }
+            input {
+                id = USER_NAME
+                type = InputType.text
+                name = "userName"
+                placeholder = "Enter username"
+            }
+            label {
+                input {
+                    id = "observer"
+                    type = InputType.checkBox
+                    name = "observer"
+                    role = "switch"
+                }
+                +"Observer"
+            }
         }
         button {
             type = ButtonType.submit
@@ -164,16 +174,34 @@ fun gameFragment(userName: UserName, game: Game): String {
             h2 { +"Users" }
 
             table {
-                game.users().forEach {
+                thead {
                     tr {
-                        td {
+                        th { +"Users" }
+                        th {}
+                        th { +"Observers" }
+                    }
+                }
 
-                            +"$it "
-                        }
-                        td {
-                            button {
-                                classes = setOf(game.userState(it))
-                                +game.cardValue(it)
+                tbody {
+                    game.userDisplay().forEach {
+                        tr {
+                            td {
+                                if (it.hasPlayer()) {
+                                    +"${it.playerName}"
+                                }
+                            }
+                            td {
+                                if (it.hasPlayer()) {
+                                    button {
+                                        classes = setOf(it.state)
+                                        +it.card
+                                    }
+                                }
+                            }
+                            td {
+                                if (it.hasObserver()) {
+                                    +"${it.observerName}"
+                                }
                             }
                         }
                     }
@@ -181,12 +209,14 @@ fun gameFragment(userName: UserName, game: Game): String {
             }
 
         }
-        section {
-            h2 {
-                +"Cards"
-            }
-            div {
-                buildCards(userName, game)
+        if (game.isPlayer(userName)) {
+            section {
+                h2 {
+                    +"Cards"
+                }
+                div {
+                    buildCards(userName, game)
+                }
             }
         }
     }

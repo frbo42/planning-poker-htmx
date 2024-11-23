@@ -28,16 +28,17 @@ class PokerController(
     @PostMapping("{gameId}/$SET_USER")
     fun setUser(
         @PathVariable("gameId") gameId: ProjectId,
-        @RequestParam(name = "userName") userName: UserName
+        @RequestParam(name = USER_NAME) userName: UserName,
+        @RequestParam(name = "observer", required = false) observer: Boolean?
     ): String {
-        service.addUser(gameId, userName)
+        service.addUser(gameId,  userName, observer == true)
         return mainPage(gameId, userName)
     }
 
     @GetMapping("/{gameId}/$SCORE")
     fun getScore(
         @PathVariable("gameId") gameId: ProjectId,
-        @RequestParam(name = "userName") userName: UserName
+        @RequestParam(name = USER_NAME) userName: UserName
     ): String {
         val game = service.getScore(gameId, userName)
         return gameFragment(userName, game)
@@ -47,7 +48,7 @@ class PokerController(
     fun selectCard(
         @PathVariable("gameId") gameId: ProjectId,
         @RequestParam(name = "selectedCard") selectedCard: String,
-        @RequestParam(name = "userName") userName: UserName
+        @RequestParam(name = USER_NAME) userName: UserName
     ): String {
         val game = service.selectCard(gameId, userName, selectedCard)
 
@@ -55,14 +56,14 @@ class PokerController(
     }
 
     @PostMapping("/{gameId}/show")
-    fun show(@PathVariable("gameId") gameId: ProjectId, @RequestParam(name = "userName") userName: UserName): String {
+    fun show(@PathVariable("gameId") gameId: ProjectId, @RequestParam(name = USER_NAME) userName: UserName): String {
         val game = service.show(gameId)
 
         return gameFragment(userName, game)
     }
 
     @PostMapping("/{gameId}/reset")
-    fun reset(@PathVariable("gameId") gameId: ProjectId, @RequestParam(name = "userName") userName: UserName): String {
+    fun reset(@PathVariable("gameId") gameId: ProjectId, @RequestParam(name = USER_NAME) userName: UserName): String {
         val game = service.reset(gameId)
 
         return gameFragment(userName, game)
