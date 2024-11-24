@@ -1,4 +1,4 @@
-package poker
+package poker.application
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

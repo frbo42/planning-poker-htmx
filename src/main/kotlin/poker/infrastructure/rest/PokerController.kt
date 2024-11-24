@@ -1,10 +1,27 @@
-package poker
+package poker.infrastructure.rest
 
 import org.springframework.http.MediaType
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.RestController
+import poker.infrastructure.ui.BASE_URL
+import poker.infrastructure.ui.SCORE
+import poker.infrastructure.ui.SELECT_CARD
+import poker.infrastructure.ui.SET_GAME_ID
+import poker.infrastructure.ui.SET_USER
+import poker.infrastructure.ui.USER_NAME
+import poker.application.GameService
+import poker.infrastructure.ui.cards
 import poker.domain.GameId
 import poker.domain.UserName
-
+import poker.infrastructure.ui.gameFragment
+import poker.infrastructure.ui.home
+import poker.infrastructure.ui.homeUserFragment
+import poker.infrastructure.ui.inputUserFragment
+import poker.infrastructure.ui.mainPage
 
 @RestController
 @RequestMapping(BASE_URL)
@@ -27,7 +44,7 @@ class PokerController(
         return inputUserFragment(gameId)
     }
 
-    @PostMapping("{gameId}/$SET_USER")
+    @PostMapping("{gameId}/${SET_USER}")
     fun setUser(
         @PathVariable("gameId") gameId: GameId,
         @RequestParam(name = USER_NAME) userName: UserName,
@@ -37,7 +54,7 @@ class PokerController(
         return mainPage(gameId, userName)
     }
 
-    @GetMapping("/{gameId}/$SCORE")
+    @GetMapping("/{gameId}/${SCORE}")
     fun getScore(
         @PathVariable("gameId") gameId: GameId,
         @RequestParam(name = USER_NAME) userName: UserName
@@ -46,7 +63,7 @@ class PokerController(
         return gameFragment(userName, game)
     }
 
-    @PostMapping("/{gameId}$SELECT_CARD")
+    @PostMapping("/{gameId}${SELECT_CARD}")
     fun selectCard(
         @PathVariable("gameId") gameId: GameId,
         @RequestParam(name = "selectedCard") selectedCard: String,

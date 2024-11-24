@@ -1,4 +1,4 @@
-package poker
+package poker.infrastructure.ui
 
 import kotlinx.html.HTMLTag
 
