@@ -61,8 +61,10 @@ data class Game(
 
     fun addUser(userName: UserName, observer: Boolean) {
         if (observer) {
+            players.remove(userName)
             observers.putIfAbsent(userName, Observer())
         } else {
+            observers.remove(userName)
             players.putIfAbsent(userName, Hand(null))
         }
     }
