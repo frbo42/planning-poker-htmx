@@ -1,54 +1,14 @@
-package poker
+package poker.domain
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.Collator
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.collections.get
 
-private val collator = Collator.getInstance(Locale.GERMAN)
 private const val WAIT_TIME = 10_000
 
-data class Hand(
-    var card: String?,
-    var lastAccess: Long = System.currentTimeMillis(),
-) {
-    fun reset() {
-        card = null
-    }
-
-    fun ping() {
-        lastAccess = System.currentTimeMillis()
-    }
-}
-
-
-@JvmInline
-value class UserName(private val name: String) : Comparable<UserName> {
-
-    override fun compareTo(other: UserName): Int {
-        return collator.compare(name, other.name)
-    }
-
-    override fun toString(): String {
-        return name
-    }
-}
-
-@JvmInline
-value class GameId(private val id: String) {
-    override fun toString(): String {
-        return id
-    }
-}
-
-data class Observer(var lastAccess: Long = System.currentTimeMillis()) {
-    fun ping() {
-        lastAccess = System.currentTimeMillis()
-    }
-}
 
 data class Game(
     val gamId: GameId,
@@ -146,21 +106,6 @@ data class Game(
 
     companion object {
         val cards = listOf("?", "1", "2", "3", "5", "8", "13", "21")
-    }
-}
-
-data class Display(
-    val playerName:UserName?,
-    val state: String,
-    val card: String,
-    val observerName:UserName?
-) {
-    fun hasPlayer(): Boolean {
-        return playerName != null
-    }
-
-    fun hasObserver(): Boolean {
-        return observerName != null
     }
 }
 

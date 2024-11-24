@@ -2,6 +2,8 @@ package poker
 
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
+import poker.domain.GameId
+import poker.domain.UserName
 
 
 @RestController

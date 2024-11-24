@@ -4,6 +4,10 @@ import kotlinx.html.*
 import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
+import poker.domain.Display
+import poker.domain.Game
+import poker.domain.GameId
+import poker.domain.UserName
 
 const val SCORE = "score"
 const val SET_USER = "setUser"
