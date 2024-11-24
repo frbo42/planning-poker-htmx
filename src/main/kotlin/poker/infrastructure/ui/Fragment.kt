@@ -103,9 +103,11 @@ fun homeUserFragment(gameId: GameId): String {
     }.serialize()
 }
 
+private const val CSS_ALIGN_HEADER_RIGHT = "align-header-right"
+
 private fun HEADER.userDetailHGroup(gameId: GameId?, userName: UserName?, observer: Boolean ) {
     hGroup {
-        classes = setOf("align-right")
+        classes = setOf(CSS_ALIGN_HEADER_RIGHT)
         div {
             gameId?.let {
                 p {
@@ -244,9 +246,11 @@ private fun TBODY.displayRow(display: Display) {
     }
 }
 
+private const val CSS_CARD_STACK = "card-stack"
+
 private fun DIV.buildCards(userName: UserName, game: Game) {
     id = CARDS
-    classes = setOf("card-stack")
+    classes = setOf(CSS_CARD_STACK)
     Game.cards.forEach { card ->
         button {
             classes = setOf(game.selectionState(userName, card))
@@ -265,6 +269,8 @@ fun cards(userName: UserName, game: Game): String {
     }
 }
 
+private const val CSS_BUTTON_BAR = "button-bar"
+
 fun mainPage(gameId: GameId, userName: UserName, observer: Boolean): String {
     return createHTML().body {
         id = BODY
@@ -277,7 +283,7 @@ fun mainPage(gameId: GameId, userName: UserName, observer: Boolean): String {
                 hxSwap("innerHTML")
             }
             section {
-                classes = setOf("button-bar")
+                classes = setOf(CSS_BUTTON_BAR)
                 button {
                     hxPost("/${gameId}/show?userName=${userName}")
                     hxTrigger("click")
@@ -318,15 +324,15 @@ private fun HEAD.styles() {
     style {
         unsafe {
             +"""
-                .align-right {
+                .$CSS_ALIGN_HEADER_RIGHT {
                     display: flex;
                     justify-content: flex-end;
                 }
-                .button-bar {
+                .$CSS_BUTTON_BAR {
                     display: flex;
                     gap: 1rem;
                 }
-                .card-stack {
+                .$CSS_CARD_STACK {
                     display: flex;
                     gap: 1rem;
                 }
