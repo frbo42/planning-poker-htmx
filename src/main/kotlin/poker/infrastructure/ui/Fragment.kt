@@ -21,6 +21,7 @@ private const val GAME_ID = "gameId"
 private const val MAIN_ID = "main"
 private const val BODY = "body"
 private const val TITLE = "Planning Poker"
+private const val CSS_TEXT_RIGHT = "text-right"
 
 
 fun HTML.htmlHeader() {
@@ -185,7 +186,10 @@ fun gameFragment(userName: UserName, game: Game): String {
                     tr {
                         th { +"Users" }
                         th {}
-                        th { +"Observers" }
+                        th {
+                            classes = setOf(CSS_TEXT_RIGHT)
+                            +"Observers"
+                        }
                     }
                 }
 
@@ -230,6 +234,7 @@ private fun TBODY.displayRow(display: Display) {
             }
         }
         td {
+            classes = setOf(CSS_TEXT_RIGHT)
             when {
                 display.hasObserver() -> {
                     +"${display.observerName}"
@@ -324,6 +329,9 @@ private fun HEAD.styles() {
                 .card-stack {
                     display: flex;
                     gap: 1rem;
+                }
+                .$CSS_TEXT_RIGHT {
+                    text-align: right;
                 }
                 """.trimIndent()
         }
