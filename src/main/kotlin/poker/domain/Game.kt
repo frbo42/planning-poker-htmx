@@ -1,13 +1,9 @@
 package poker.domain
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.get
 
-private const val WAIT_TIME = 10_000
+private const val WAIT_TIME = 20_000
 
 
 data class Game(
@@ -15,9 +11,8 @@ data class Game(
     private var show: Boolean = false,
     private val players: MutableMap<UserName, Hand> = ConcurrentHashMap(),
     private val observers: MutableMap<UserName, Observer> = ConcurrentHashMap(),
+    private var lastAccess: Long = System.currentTimeMillis()
 ) {
-
-    private val userCleaner = AsyncUserCleaner(players,observers)
 
     fun addUser(userName: UserName, observer: Boolean) {
         if (observer) {
@@ -69,7 +64,7 @@ data class Game(
     fun ping(userName: UserName) {
         players[userName]?.ping()
         observers[userName]?.ping()
-        userCleaner.cleanUsers()
+        lastAccess = System.currentTimeMillis()
     }
 
     fun cardValue(userName: UserName?): String {
@@ -95,13 +90,16 @@ data class Game(
     }
 
     fun canBeRemoved(): Boolean {
-        var playersInactive = players.all { inactiveFor20s(System.currentTimeMillis(), it.value.lastAccess) }
-        var observersInactive = observers.all { inactiveFor20s(System.currentTimeMillis(), it.value.lastAccess) }
-        return playersInactive && observersInactive
+        return players.isEmpty() && observers.isEmpty() && inactiveFor20s(lastAccess)
     }
 
     fun isPlayer(userName: UserName): Boolean {
        return players.keys.contains(userName)
+    }
+
+    fun clean() {
+        observers.entries.removeIf { inactiveFor20s(it.value.lastAccess) }
+        players.entries.removeIf { inactiveFor20s(it.value.lastAccess) }
     }
 
     companion object {
@@ -109,34 +107,4 @@ data class Game(
     }
 }
 
-class AsyncUserCleaner(private val cards: MutableMap<UserName, Hand>,private val observers: MutableMap<UserName, Observer>) {
-    private val isRunning = AtomicBoolean(false)
-    private var lastCall: Long = 0
-
-    fun cleanUsers() {
-        val currentTime = System.currentTimeMillis()
-
-        if (checkedInLast10Seconds(currentTime)) {
-            return
-        }
-
-        lastCall = currentTime
-
-        if (isRunning.compareAndSet(false, true)) {
-            startAsyncCheck(currentTime)
-        }
-    }
-
-    private fun startAsyncCheck(currentTime: Long) {
-        CoroutineScope(Dispatchers.Default).launch {
-            cards.entries.removeIf { inactiveFor20s(currentTime, it.value.lastAccess) }
-            observers.entries.removeIf { inactiveFor20s(currentTime, it.value.lastAccess) }
-            isRunning.set(false)
-        }
-    }
-
-
-    private fun checkedInLast10Seconds(currentTime: Long) = currentTime - lastCall < WAIT_TIME
-}
-
-private fun inactiveFor20s(currentTime: Long, hand: Long) = currentTime - hand > 2 * WAIT_TIME
+private fun inactiveFor20s( timeStamp: Long) = System.currentTimeMillis() - timeStamp >  WAIT_TIME
