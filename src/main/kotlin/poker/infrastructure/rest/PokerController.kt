@@ -51,7 +51,7 @@ class PokerController(
         @RequestParam(name = "observer", required = false) observer: Boolean?
     ): String {
         service.addUser(gameId,  userName, observer == true)
-        return mainPage(gameId, userName)
+        return mainPage(gameId, userName, observer == true)
     }
 
     @GetMapping("/{gameId}/${SCORE}")

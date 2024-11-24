@@ -80,11 +80,11 @@ private fun SECTION.inputGameIdFragment() {
     }
 }
 
-private fun BODY.headerBody(gameId: GameId? = null, userName: UserName? = null) {
+private fun BODY.headerBody(gameId: GameId? = null, userName: UserName? = null, observer:Boolean=false) {
     header {
         classes = setOf("container")
         h1 { +TITLE }
-        userDetailHGroup(gameId, userName)
+        userDetailHGroup(gameId, userName, observer )
     }
 }
 
@@ -102,7 +102,7 @@ fun homeUserFragment(gameId: GameId): String {
     }.serialize()
 }
 
-private fun HEADER.userDetailHGroup(gameId: GameId?, userName: UserName?) {
+private fun HEADER.userDetailHGroup(gameId: GameId?, userName: UserName?, observer: Boolean ) {
     hGroup {
         classes = setOf("align-right")
         div {
@@ -118,7 +118,10 @@ private fun HEADER.userDetailHGroup(gameId: GameId?, userName: UserName?) {
                 p {
                     a {
                         href = "/poker/$gameId"
-                        +"User: $userName"
+                        +when {
+                            observer -> "Observer: $userName"
+                            else -> "Player: $userName"
+                        }
                     }
                 }
             }
@@ -257,10 +260,10 @@ fun cards(userName: UserName, game: Game): String {
     }
 }
 
-fun mainPage(gameId: GameId, userName: UserName): String {
+fun mainPage(gameId: GameId, userName: UserName, observer: Boolean): String {
     return createHTML().body {
         id = BODY
-        headerBody(gameId, userName)
+        headerBody(gameId, userName, observer )
         mainBody {
             section {
                 id = SCORE
