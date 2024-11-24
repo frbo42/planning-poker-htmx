@@ -21,8 +21,11 @@ private const val GAME_ID = "gameId"
 private const val MAIN_ID = "main"
 private const val BODY = "body"
 private const val TITLE = "Planning Poker"
-private const val CSS_TEXT_RIGHT = "text-right"
 
+private const val CSS_ALIGN_HEADER_RIGHT = "align-header-right"
+private const val CSS_CARD_STACK = "card-stack"
+private const val CSS_BUTTON_BAR = "button-bar"
+private const val CSS_TEXT_RIGHT = "text-right"
 
 fun HTML.htmlHeader() {
     head {
@@ -102,8 +105,6 @@ fun homeUserFragment(gameId: GameId): String {
         }
     }.serialize()
 }
-
-private const val CSS_ALIGN_HEADER_RIGHT = "align-header-right"
 
 private fun HEADER.userDetailHGroup(gameId: GameId?, userName: UserName?, observer: Boolean ) {
     hGroup {
@@ -246,8 +247,6 @@ private fun TBODY.displayRow(display: Display) {
     }
 }
 
-private const val CSS_CARD_STACK = "card-stack"
-
 private fun DIV.buildCards(userName: UserName, game: Game) {
     id = CARDS
     classes = setOf(CSS_CARD_STACK)
@@ -268,8 +267,6 @@ fun cards(userName: UserName, game: Game): String {
         buildCards(userName, game)
     }
 }
-
-private const val CSS_BUTTON_BAR = "button-bar"
 
 fun mainPage(gameId: GameId, userName: UserName, observer: Boolean): String {
     return createHTML().body {
