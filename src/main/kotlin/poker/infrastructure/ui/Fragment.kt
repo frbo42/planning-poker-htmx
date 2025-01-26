@@ -316,6 +316,7 @@ private fun HEAD.styles() {
     link {
         rel = "stylesheet"
         href = "/css/pico.min.css"
+        // version https://picocss.com/docs version 2.0.2
 //        href = "https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
     }
     style {
