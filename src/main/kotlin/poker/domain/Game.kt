@@ -1,7 +1,5 @@
 package poker.domain
 
-import java.util.concurrent.ConcurrentHashMap
-
 private const val WAIT_TIME = 20_000
 
 
@@ -38,7 +36,7 @@ data class Game(
 
         val displays: MutableList<Display> = mutableListOf<Display>()
         for (i in 0 until size) {
-            val playerName = players.player(i)
+            val playerName = players.activePlayer(i)
             val observerName = players.observer(i)
             displays.add( Display(
                 playerName,
@@ -83,12 +81,6 @@ data class Game(
 
     fun isPlayer(userName: UserName): Boolean {
        return players.isPlayer(userName)
-    }
-
-    fun clean() {
-        println("clean")
-//        observers.entries.removeIf { inactiveFor20s(it.value.lastAccess) }
-//        players.entries.removeIf { inactiveFor20s(it.value.lastAccess) }
     }
 
     companion object {

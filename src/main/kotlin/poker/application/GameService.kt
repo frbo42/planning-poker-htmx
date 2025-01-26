@@ -53,7 +53,6 @@ class GameService {
     }
 
     fun clean() {
-        games.entries.forEach { it.value.clean() }
         games.entries.removeIf {
             it.value.canBeRemoved()
         }

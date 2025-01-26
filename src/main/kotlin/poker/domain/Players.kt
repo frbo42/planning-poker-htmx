@@ -3,9 +3,6 @@ package poker.domain
 import java.util.concurrent.ConcurrentHashMap
 
 class Players() {
-    fun remove(name: UserName) {
-        players.remove(name)
-    }
 
     fun addUser(name: UserName, observer: Boolean = false) {
         players.putIfAbsent(name, Hand(null, observer))
@@ -22,11 +19,6 @@ class Players() {
 
     fun hide() {
         players.values.forEach { it.hide() }
-    }
-
-    fun get(index: Int): UserName? {
-        var sortedHand = players.keys.sorted()
-        return sortedHand.getOrNull(index)
     }
 
     fun size(): Int {
@@ -53,7 +45,7 @@ class Players() {
         return players.values.filter { it.observer }.size.coerceAtLeast(players.values.filter { !it.observer }.size)
     }
 
-    fun player(index: Int): UserName? {
+    fun activePlayer(index: Int): UserName? {
         return players
             .filter { !it.value.observer }
             .map { it.key }
