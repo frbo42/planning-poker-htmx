@@ -59,5 +59,9 @@ class Players() {
             .getOrNull(index)
     }
 
+    fun hasPlayed(name: UserName): Boolean {
+       return players[name]?.card != null
+    }
+
     private val players: MutableMap<UserName, Hand> = ConcurrentHashMap()
 }
