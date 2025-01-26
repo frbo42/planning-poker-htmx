@@ -4,7 +4,7 @@ data class Hand(
     var card: String?,
     var lastAccess: Long = System.currentTimeMillis(),
 ) {
-    fun reset() {
+    fun hide() {
         card = null
     }
 

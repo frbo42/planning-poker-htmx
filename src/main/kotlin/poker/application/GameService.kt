@@ -40,7 +40,7 @@ class GameService {
     fun reset(gameId: GameId): Game {
         val game = getGame(gameId)
 
-        game.reset()
+        game.hide()
 
         return game
     }
