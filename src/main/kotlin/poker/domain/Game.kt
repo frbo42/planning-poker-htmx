@@ -9,18 +9,11 @@ data class Game(
     val gamId: GameId,
     private var show: Boolean = false,
     private val players: Players = Players(),
-    private val observers: MutableMap<UserName, Observer> = ConcurrentHashMap(),
     private var lastAccess: Long = System.currentTimeMillis()
 ) {
 
     fun addUser(userName: UserName, observer: Boolean) {
-        if (observer) {
-            players.remove(userName)
-            observers.putIfAbsent(userName, Observer())
-        } else {
-            observers.remove(userName)
-            players.addUser(userName)
-        }
+        players.addUser(userName, observer)
     }
 
     fun selectionState(userName: UserName, card: String): String {
@@ -41,14 +34,12 @@ data class Game(
     }
 
     fun userDisplay(): List<Display> {
-        var sortedObservers = observers.keys.sorted()
-
-        val size = players.size().coerceAtLeast(sortedObservers.size)
+        val size = players.coerceSize()
 
         val displays: MutableList<Display> = mutableListOf<Display>()
         for (i in 0 until size) {
-            val playerName = players.get(i)
-            val observerName = sortedObservers.getOrNull(i)
+            val playerName = players.player(i)
+            val observerName = players.observer(i)
             displays.add( Display(
                 playerName,
                 userState(playerName),
@@ -61,7 +52,6 @@ data class Game(
 
     fun ping(userName: UserName) {
         players.ping(userName)
-        observers[userName]?.ping()
         lastAccess = System.currentTimeMillis()
     }
 
@@ -96,6 +86,7 @@ data class Game(
     }
 
     fun clean() {
+        println("clean")
 //        observers.entries.removeIf { inactiveFor20s(it.value.lastAccess) }
 //        players.entries.removeIf { inactiveFor20s(it.value.lastAccess) }
     }

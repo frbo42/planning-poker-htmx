@@ -7,11 +7,12 @@ class Players() {
         players.remove(name)
     }
 
-    fun addUser(name: UserName) {
-        players.putIfAbsent(name, Hand(null))
+    fun addUser(name: UserName, observer: Boolean = false) {
+        players.putIfAbsent(name, Hand(null, observer))
+        players[name] = Hand(null, observer)
     }
 
-    fun userHasCard(name: UserName, card: String):Boolean {
+    fun userHasCard(name: UserName, card: String): Boolean {
         return card == this.players[name]?.card
     }
 
@@ -25,15 +26,15 @@ class Players() {
 
     fun get(index: Int): UserName? {
         var sortedHand = players.keys.sorted()
-       return sortedHand.getOrNull(index)
+        return sortedHand.getOrNull(index)
     }
 
     fun size(): Int {
-return        players.size
+        return players.size
     }
 
     fun ping(name: UserName) {
-        if(!players.containsKey(name)) {
+        if (!players.containsKey(name)) {
             addUser(name)
         }
 
@@ -45,7 +46,25 @@ return        players.size
     }
 
     fun isPlayer(name: UserName): Boolean {
-return        players.keys.contains(name)
+        return players.keys.contains(name)
+    }
+
+    fun coerceSize(): Int {
+        return players.values.filter { it.observer }.size.coerceAtLeast(players.values.filter { !it.observer }.size)
+    }
+
+    fun player(index: Int): UserName? {
+        return players
+            .filter { !it.value.observer }
+            .map { it.key }
+            .getOrNull(index)
+    }
+
+    fun observer(index: Int): UserName? {
+        return players
+            .filter { it.value.observer }
+            .map { it.key }
+            .getOrNull(index)
     }
 
     private val players: MutableMap<UserName, Hand> = ConcurrentHashMap()
