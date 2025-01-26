@@ -2,6 +2,8 @@ package poker.domain
 
 import java.util.concurrent.ConcurrentHashMap
 
+private const val UNPLAYED_CARD = "X"
+
 class Players() {
 
     fun addUser(name: UserName, observer: Boolean = false) {
@@ -33,8 +35,8 @@ class Players() {
         players[name]?.ping()
     }
 
-    fun cardValue(name: UserName?): String? {
-        return players[name]?.card
+    fun cardValue(name: UserName?): String {
+        return players[name]?.card ?: UNPLAYED_CARD
     }
 
     fun isPlayer(name: UserName): Boolean {

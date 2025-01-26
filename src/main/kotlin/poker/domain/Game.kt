@@ -7,6 +7,9 @@ private const val DISPLAYED_CARD_CSS = "Contrast outline"
 private const val HIDDEN_PLAYED_CARD_CSS = "contrast"
 private const val HIDDEN_UNPLAYED_CARD_CSS = "secondary"
 
+private const val HIDDEN_CARD = "\uD83C\uDCA0"
+
+
 data class Game(
     val gamId: GameId,
     private var show: Boolean = false,
@@ -46,7 +49,7 @@ data class Game(
                 Display(
                     playerName,
                     playerName.state(),
-                    cardValue(playerName),
+                    playerName.value(),
                     observerName
                 )
             )
@@ -57,14 +60,6 @@ data class Game(
     fun ping(userName: UserName) {
         players.ping(userName)
         lastAccess = System.currentTimeMillis()
-    }
-
-    fun cardValue(userName: UserName?): String {
-        if (!show) {
-            return "\uD83C\uDCA0"
-        }
-
-        return players.cardValue(userName) ?: return "X"
     }
 
     fun canBeRemoved(): Boolean {
@@ -92,6 +87,13 @@ data class Game(
             HIDDEN_PLAYED_CARD_CSS
         else
             HIDDEN_UNPLAYED_CARD_CSS
+    }
+
+    private fun UserName?.value(): String {
+        return if (!show)
+            return HIDDEN_CARD
+        else
+            players.cardValue(this)
     }
 }
 
