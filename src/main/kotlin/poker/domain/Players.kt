@@ -11,9 +11,8 @@ class Players() {
         players[name] = Hand(null, observer)
     }
 
-    fun userHasCard(name: UserName, card: String): Boolean {
-        return card == this.players[name]?.card
-    }
+    fun userHasCard(name: UserName, card: String) = card == this.players[name]?.card
+
 
     fun selectCard(name: UserName, card: String) {
         players[name]?.card = card
@@ -23,9 +22,7 @@ class Players() {
         players.values.forEach { it.hide() }
     }
 
-    fun size(): Int {
-        return players.size
-    }
+    fun size() = players.size
 
     fun ping(name: UserName) {
         if (!players.containsKey(name)) {
@@ -35,35 +32,25 @@ class Players() {
         players[name]?.ping()
     }
 
-    fun cardValue(name: UserName?): String {
-        return players[name]?.card ?: UNPLAYED_CARD
-    }
+    fun cardValue(name: UserName?) = players[name]?.card ?: UNPLAYED_CARD
 
-    fun isPlayer(name: UserName): Boolean {
-        return players.keys.contains(name)
-    }
+    fun isPlayer(name: UserName) = players.keys.contains(name)
 
-    fun coerceSize(): Int {
-        return players.values.filter { it.observer }.size.coerceAtLeast(players.values.filter { !it.observer }.size)
-    }
+    fun coerceSize() =
+        players.values.filter { it.observer }.size.coerceAtLeast(players.values.filter { !it.observer }.size)
 
-    fun activePlayer(index: Int): UserName? {
-        return players
-            .filter { !it.value.observer }
-            .map { it.key }
-            .getOrNull(index)
-    }
 
-    fun observer(index: Int): UserName? {
-        return players
-            .filter { it.value.observer }
-            .map { it.key }
-            .getOrNull(index)
-    }
+    fun activePlayer(index: Int) = players
+        .filter { !it.value.observer }
+        .map { it.key }
+        .getOrNull(index)
 
-    fun hasPlayed(name: UserName): Boolean {
-       return players[name]?.card != null
-    }
+    fun observer(index: Int) = players
+        .filter { it.value.observer }
+        .map { it.key }
+        .getOrNull(index)
+
+    fun hasPlayed(name: UserName) = players[name]?.card != null
 
     private val players: MutableMap<UserName, Hand> = ConcurrentHashMap()
 }

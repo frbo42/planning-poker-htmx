@@ -89,12 +89,8 @@ data class Game(
             HIDDEN_UNPLAYED_CARD_CSS
     }
 
-    private fun UserName?.value(): String {
-        return if (!show)
-            return HIDDEN_CARD
-        else
-            players.cardValue(this)
-    }
+    private fun UserName?.value()= if (!show) HIDDEN_CARD else players.cardValue(this)
+
 }
 
 
